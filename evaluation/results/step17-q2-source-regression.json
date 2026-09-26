@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "started_at": "2026-09-26T13:42:58.833708+00:00",
+  "model": "qwen2.5:3b",
+  "split": "all",
+  "results": [
+    {
+      "id": "Q2",
+      "split": "held_out",
+      "paper_id": "2305.14314v1",
+      "question": "What is the purpose of QLoRA's 4-bit NormalFloat (NF4) data type?",
+      "expected_status": "answered",
+      "elapsed_seconds": 1.166,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "The 4-bit NormalFloat (NF4) data type is information theoretically optimal for normally distributed weights.",
+        "citations": [
+          {
+            "chunk_id": "2305.14314v1-33a4e757c19d-p1-sd21b4a64-g1-c0-25f3b98821b4",
+            "arxiv_id": "2305.14314",
+            "version": 1,
+            "page": 1,
+            "section": "Abstract"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p1-sd21b4a64-g1-c0-25f3b98821b4",
+          "source_quote": "QLORA introduces a number of innovations to save memory without sacrificing performance: (a) 4-bit NormalFloat (NF4), a new data type that is information theoretically optimal for normally distributed weights (b) Double Quantization to reduce the average"
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p7-sc14df8a2-g12-c4-b75a129aa776",
+          "page": 7,
+          "section": "QLoRA vs. Standard Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p24-sfa13ce2d-g43-c0-97494c3b2bc1",
+          "page": 24,
+          "section": "NormalFloat 4-bit data type"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p1-sd21b4a64-g1-c0-25f3b98821b4",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p4-sfccfd817-g7-c0-58e13c13bae4",
+          "page": 4,
+          "section": "QLORA Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p5-sc14df8a2-g10-c0-488157594155",
+          "page": 5,
+          "section": "QLoRA vs. Standard Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p4-sfccfd817-g7-c1-a3d58d571989",
+          "page": 4,
+          "section": "QLORA Finetuning"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": true,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    }
+  ]
+}

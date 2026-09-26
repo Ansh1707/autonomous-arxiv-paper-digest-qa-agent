@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "design": "Second, fresh ten-question validation set written after fixes to the first challenge. Source expectations were checked before its first run; do not tune to this set and call its rerun independent.",
+  "cases": [
+    {
+      "id": "FV-T1", "split": "challenge", "paper_id": "1706.03762v1",
+      "question": "What beta-2 value did the Transformer paper use with Adam?", "expected_status": "answered",
+      "expected_page": 7, "expected_patterns": ["0\\.98", "Adam|beta|β"],
+      "source_excerpt": "Adam optimizer [18] with β1 = 0.9, β2 = 0.98"
+    },
+    {
+      "id": "FV-T2", "split": "challenge", "paper_id": "1706.03762v1",
+      "question": "What label-smoothing value did the Transformer use during training?", "expected_status": "answered",
+      "expected_page": 7, "expected_patterns": ["0\\.1", "label.smooth"],
+      "source_excerpt": "employed label smoothing of value εls = 0.1"
+    },
+    {
+      "id": "FV-T3", "split": "challenge", "paper_id": "1706.03762v1",
+      "question": "What beam size did the Transformer use for translation inference?", "expected_status": "answered",
+      "expected_page": 8, "expected_patterns": ["\\b4\\b|four", "beam"],
+      "source_excerpt": "We used beam search with a beam size of 4"
+    },
+    {
+      "id": "FV-T4", "split": "challenge", "paper_id": "1706.03762v1",
+      "question": "What BLEU score did Transformer big report for English-to-Italian translation?", "expected_status": "insufficient_evidence",
+      "reason_absent": "The paper reports English-to-German and English-to-French results, not English-to-Italian."
+    },
+    {
+      "id": "FV-T5", "split": "challenge", "paper_id": "1706.03762v1",
+      "question": "What F1 score did the Transformer report on SQuAD question answering?", "expected_status": "insufficient_evidence",
+      "reason_absent": "This paper reports no SQuAD question-answering experiment."
+    },
+    {
+      "id": "FV-Q1", "split": "challenge", "paper_id": "2305.14314v1",
+      "question": "For what kind of weight distribution is QLoRA's NF4 data type information-theoretically optimal?", "expected_status": "answered",
+      "expected_page": 1, "expected_patterns": ["normal|Gaussian", "weight|distribut"],
+      "source_excerpt": "information theoretically optimal for normally distributed weights"
+    },
+    {
+      "id": "FV-Q2", "split": "challenge", "paper_id": "2305.14314v1",
+      "question": "How many instruction datasets did the QLoRA paper analyze?", "expected_status": "answered",
+      "expected_page": 1, "expected_patterns": ["\\b8\\b|eight", "instruction|dataset"],
+      "source_excerpt": "across 8 instruction datasets"
+    },
+    {
+      "id": "FV-Q3", "split": "challenge", "paper_id": "2305.14314v1",
+      "question": "According to the paper, what GPU memory and training time suffice for Guanaco 33B?", "expected_status": "answered",
+      "expected_page": 10, "expected_patterns": ["24\\s*GB", "12\\s*hours|12\\s*h"],
+      "source_excerpt": "33B Guanaco can be trained on 24 GB consumer GPUs in less than 12 hours"
+    },
+    {
+      "id": "FV-Q4", "split": "challenge", "paper_id": "2305.14314v1",
+      "question": "What accuracy did QLoRA report on the GLUE benchmark?", "expected_status": "insufficient_evidence",
+      "reason_absent": "The paper does not report a GLUE benchmark accuracy."
+    },
+    {
+      "id": "FV-Q5", "split": "challenge", "paper_id": "2305.14314v1",
+      "question": "What exact US-dollar cost did the authors report for finetuning Guanaco 65B?", "expected_status": "insufficient_evidence",
+      "reason_absent": "The paper reports GPU and time requirements but no exact monetary training cost."
+    }
+  ]
+}

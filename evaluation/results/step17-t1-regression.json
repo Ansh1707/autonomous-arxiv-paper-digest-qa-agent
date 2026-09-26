@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "started_at": "2026-09-26T13:11:03.546257+00:00",
+  "model": "qwen2.5:3b",
+  "split": "all",
+  "results": [
+    {
+      "id": "T1",
+      "split": "held_out",
+      "paper_id": "1706.03762v1",
+      "question": "What mechanisms replace recurrence and convolutions in the Transformer architecture?",
+      "expected_status": "answered",
+      "elapsed_seconds": 28.285,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "The Transformer architecture replaces recurrence and convolutions with attention mechanisms to model dependencies between input and output sequences.",
+        "citations": [
+          {
+            "chunk_id": "1706.03762v1-0a9bff1be357-p1-sd21b4a64-g1-c0-ad65c9963b57",
+            "arxiv_id": "1706.03762",
+            "version": 1,
+            "page": 1,
+            "section": "Abstract"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p1-sd21b4a64-g1-c0-ad65c9963b57",
+          "source_quote": "We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely."
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p9-sd1ecdb7f-g30-c0-03eaa3bf4b8a",
+          "page": 9,
+          "section": "English Constituency Parsing"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p1-sd21b4a64-g1-c0-ad65c9963b57",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p2-sb605350b-g3-c0-b35351af4f45",
+          "page": 2,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p10-s89db2ad8-g31-c1-43b230d66eaf",
+          "page": 10,
+          "section": "Conclusion"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p2-s8f572f78-g5-c0-e0552706aae9",
+          "page": 2,
+          "section": "Model Architecture"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p2-sea2b8a87-g4-c0-7ee552ee1658",
+          "page": 2,
+          "section": "Background"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": true,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    }
+  ]
+}

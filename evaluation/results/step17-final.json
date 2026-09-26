@@ -1,0 +1,862 @@
+{
+  "schema_version": 1,
+  "started_at": "2026-09-26T08:26:22.128232+00:00",
+  "model": "qwen2.5:3b",
+  "split": "all",
+  "results": [
+    {
+      "id": "L1",
+      "split": "development",
+      "paper_id": "2106.09685v1",
+      "question": "What does LoRA freeze during training?",
+      "expected_status": "answered",
+      "elapsed_seconds": 9.855,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "LoRA freezes the pre-trained model weights and injects trainable rank decomposition matrices into each layer of the Transformer architecture, reducing the number of trainable parameters for downstream tasks.",
+        "citations": [
+          {
+            "chunk_id": "2106.09685v1-38a259c1926b-p1-sd21b4a64-g1-c0-972beeac623f",
+            "arxiv_id": "2106.09685",
+            "version": 1,
+            "page": 1,
+            "section": "Abstract"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p1-sd21b4a64-g1-c0-972beeac623f",
+          "source_quote": "We propose Low-Rank Adaptation, or LoRA, which freezes the pre-trained model weights and injects trainable rank decomposition matrices into each layer of the Transformer architecture, greatly reducing the number of trainable parameters for downstream tasks."
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p1-sd21b4a64-g1-c0-972beeac623f",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p2-sb605350b-g3-c0-0f53ca0f04dd",
+          "page": 2,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p4-s5fb49221-g8-c1-2ebcaca342c0",
+          "page": 4,
+          "section": "Applying LoRA to Transformer"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p14-s31b344d0-g34-c2-9ca559c1b404",
+          "page": 14,
+          "section": "Combining LoRA with Prefix Tuning"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p5-sb5a4beff-g12-c3-eb9415e5887c",
+          "page": 5,
+          "section": "Baselines"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p6-s491232f4-g14-c3-5db3f892da47",
+          "page": 6,
+          "section": "Performance on GPT-3"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": true,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "L2",
+      "split": "development",
+      "paper_id": "2106.09685v1",
+      "question": "For GPT-3, by how much can LoRA reduce trainable parameters compared with full fine-tuning?",
+      "expected_status": "answered",
+      "elapsed_seconds": 10.324,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "LoRA can reduce the number of trainable parameters by 10,000 times compared to full fine-tuning for GPT-3.",
+        "citations": [
+          {
+            "chunk_id": "2106.09685v1-38a259c1926b-p1-sd21b4a64-g1-c0-972beeac623f",
+            "arxiv_id": "2106.09685",
+            "version": 1,
+            "page": 1,
+            "section": "Abstract"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p1-sd21b4a64-g1-c0-972beeac623f",
+          "source_quote": "For GPT-3, LoRA can reduce the number of trainable parameters by 10,000 times and the computation hardware requirement by 3 times compared to full fine-tuning."
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p1-sd21b4a64-g1-c0-972beeac623f",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p4-s5fb49221-g8-c0-2d080e50bfcf",
+          "page": 4,
+          "section": "Applying LoRA to Transformer"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p5-s491232f4-g13-c0-371aa1fba058",
+          "page": 5,
+          "section": "Performance on GPT-3"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p15-sed5f806d-g38-c1-3b370895cef8",
+          "page": 15,
+          "section": "Low-Data Regime"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p14-s31b344d0-g34-c2-9ca559c1b404",
+          "page": 14,
+          "section": "Combining LoRA with Prefix Tuning"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p1-sd21b4a64-g1-c1-ece5659befeb",
+          "page": 1,
+          "section": "Abstract"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": true,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "L3",
+      "split": "development",
+      "paper_id": "2106.09685v1",
+      "question": "What batching limitation does LoRA explicitly report?",
+      "expected_status": "answered",
+      "elapsed_seconds": 7.563,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "LoRA explicitly reports a limitation where it is not straightforward to batch inputs to different tasks with different A and B in a single forward pass.",
+        "citations": [
+          {
+            "chunk_id": "2106.09685v1-38a259c1926b-p4-s5fb49221-g8-c1-2ebcaca342c0",
+            "arxiv_id": "2106.09685",
+            "version": 1,
+            "page": 4,
+            "section": "Applying LoRA to Transformer"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p4-s5fb49221-g8-c1-2ebcaca342c0",
+          "source_quote": "For example, it is not straightforward to batch inputs to different tasks with different A and B in a single forward pass, because we absorb A and B into W to prevent additional inference latency."
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p4-s5fb49221-g8-c1-2ebcaca342c0",
+          "page": 4,
+          "section": "Applying LoRA to Transformer"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p5-s491232f4-g13-c0-371aa1fba058",
+          "page": 5,
+          "section": "Performance on GPT-3"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p14-s31b344d0-g34-c2-9ca559c1b404",
+          "page": 14,
+          "section": "Combining LoRA with Prefix Tuning"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p2-sb605350b-g3-c1-d7b13ef31e53",
+          "page": 2,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p15-sed5f806d-g38-c1-3b370895cef8",
+          "page": 15,
+          "section": "Low-Data Regime"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p6-s491232f4-g14-c3-5db3f892da47",
+          "page": 6,
+          "section": "Performance on GPT-3"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": true,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "L4",
+      "split": "development",
+      "paper_id": "2106.09685v1",
+      "question": "What is the first author's favorite food?",
+      "expected_status": "insufficient_evidence",
+      "elapsed_seconds": 5.949,
+      "error": null,
+      "answer": {
+        "status": "insufficient_evidence",
+        "text": "I couldn’t find enough evidence in the retrieved paper text to answer that.",
+        "citations": []
+      },
+      "support_quotes": [],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p7-sf77bac32-g18-c1-45eb44ba2ef4",
+          "page": 7,
+          "section": "Which Weight Matrices in Transformer Should We Apply LoRA to?"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p8-s190fd645-g19-c4-aa4f3a967e6c",
+          "page": 8,
+          "section": "What is the Optimal Rank r for LoRA?"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p10-s4be0f860-g24-c0-b652423a9940",
+          "page": 10,
+          "section": "Acknowledgments"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": null,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "L5",
+      "split": "development",
+      "paper_id": "2106.09685v1",
+      "question": "What ImageNet classification accuracy did the LoRA GPT-3 experiment report?",
+      "expected_status": "insufficient_evidence",
+      "elapsed_seconds": 7.424,
+      "error": null,
+      "answer": {
+        "status": "insufficient_evidence",
+        "text": "I couldn’t find enough evidence in the retrieved paper text to answer that.",
+        "citations": []
+      },
+      "support_quotes": [],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p5-s491232f4-g13-c0-371aa1fba058",
+          "page": 5,
+          "section": "Performance on GPT-3"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p7-sf77bac32-g18-c1-45eb44ba2ef4",
+          "page": 7,
+          "section": "Which Weight Matrices in Transformer Should We Apply LoRA to?"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p6-s491232f4-g14-c1-2d8caf08844b",
+          "page": 6,
+          "section": "Performance on GPT-3"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p6-s491232f4-g14-c3-5db3f892da47",
+          "page": 6,
+          "section": "Performance on GPT-3"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p6-sd59a25b2-g15-c0-35cb5eff1f08",
+          "page": 6,
+          "section": "Performance on GPT-2"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p14-se7bd5a65-g33-c1-59a24ea201fb",
+          "page": 14,
+          "section": "GPT-2 LoRA"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": null,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "T1",
+      "split": "held_out",
+      "paper_id": "1706.03762v1",
+      "question": "What mechanisms replace recurrence and convolutions in the Transformer architecture?",
+      "expected_status": "answered",
+      "elapsed_seconds": 6.976,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "The Transformer architecture replaces recurrence and convolutions with attention mechanisms to model dependencies between input and output sequences without regard to their distance.",
+        "citations": [
+          {
+            "chunk_id": "1706.03762v1-0a9bff1be357-p1-sd21b4a64-g1-c0-ad65c9963b57",
+            "arxiv_id": "1706.03762",
+            "version": 1,
+            "page": 1,
+            "section": "Abstract"
+          },
+          {
+            "chunk_id": "1706.03762v1-0a9bff1be357-p2-sb605350b-g3-c0-b35351af4f45",
+            "arxiv_id": "1706.03762",
+            "version": 1,
+            "page": 2,
+            "section": "Introduction"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p1-sd21b4a64-g1-c0-ad65c9963b57",
+          "source_quote": "We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely."
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p2-sb605350b-g3-c0-b35351af4f45",
+          "source_quote": "Attention mechanisms have become an integral part of compelling sequence modeling and transduc-tion models in various tasks, allowing modeling of dependencies without regard to their distance in the input or output sequences [2, 17]."
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p1-sd21b4a64-g1-c0-ad65c9963b57",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p2-sb605350b-g3-c0-b35351af4f45",
+          "page": 2,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p10-s89db2ad8-g31-c1-43b230d66eaf",
+          "page": 10,
+          "section": "Conclusion"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p2-s8f572f78-g5-c0-e0552706aae9",
+          "page": 2,
+          "section": "Model Architecture"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p2-sea2b8a87-g4-c0-7ee552ee1658",
+          "page": 2,
+          "section": "Background"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p4-s45e97de4-g12-c0-3c4114b62543",
+          "page": 4,
+          "section": "Applications of Attention in our Model"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": true,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "T2",
+      "split": "held_out",
+      "paper_id": "1706.03762v1",
+      "question": "What BLEU score did Transformer big achieve on WMT 2014 English-to-German translation?",
+      "expected_status": "answered",
+      "elapsed_seconds": 10.355,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "Transformer (big) achieved a BLEU score of 28.4 on the WMT 2014 English-to-German translation task.",
+        "citations": [
+          {
+            "chunk_id": "1706.03762v1-0a9bff1be357-p7-s5c4c666e-g26-c0-8cbdeae7cd7b",
+            "arxiv_id": "1706.03762",
+            "version": 1,
+            "page": 7,
+            "section": "Machine Translation"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-s5c4c666e-g26-c0-8cbdeae7cd7b",
+          "source_quote": "6.1 Machine Translation On the WMT 2014 English-to-German translation task, Our big transformer model (Transformer (big) in Table 2) outperforms the best previously reported models (including ensembles) by more than 2.0 BLEU, establishing a new state-of-the-art BLEU score of 28.4."
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-s5c4c666e-g26-c0-8cbdeae7cd7b",
+          "page": 7,
+          "section": "Machine Translation"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": true,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "T3",
+      "split": "held_out",
+      "paper_id": "1706.03762v1",
+      "question": "How long were the Transformer base models trained, and on what hardware?",
+      "expected_status": "answered",
+      "elapsed_seconds": 9.388,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "The Transformer base models were trained for 12 hours on one machine with 8 NVIDIA P100 GPUs.",
+        "citations": [
+          {
+            "chunk_id": "1706.03762v1-0a9bff1be357-p7-s5f935617-g22-c0-5f0f5b4e4ac8",
+            "arxiv_id": "1706.03762",
+            "version": 1,
+            "page": 7,
+            "section": "Hardware and Schedule"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-s5f935617-g22-c0-5f0f5b4e4ac8",
+          "source_quote": "5.2 Hardware and Schedule We trained our models on one machine with 8 NVIDIA P100 GPUs. For our base models using the hyperparameters described throughout the paper, each training step took about 0.4 seconds. We trained the base models for a total of 100,000 steps or 12 hours."
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-s5f935617-g22-c0-5f0f5b4e4ac8",
+          "page": 7,
+          "section": "Hardware and Schedule"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-s5c4c666e-g26-c0-8cbdeae7cd7b",
+          "page": 7,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p10-s89db2ad8-g31-c1-43b230d66eaf",
+          "page": 10,
+          "section": "Conclusion"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p1-sd21b4a64-g1-c1-65389dcb8b8d",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c2-8cbc4bcf128f",
+          "page": 8,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c0-905961adb847",
+          "page": 8,
+          "section": "Machine Translation"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": true,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "T4",
+      "split": "held_out",
+      "paper_id": "1706.03762v1",
+      "question": "What BLEU score did Transformer big achieve on WMT 2014 English-to-Spanish translation?",
+      "expected_status": "insufficient_evidence",
+      "elapsed_seconds": 0.975,
+      "error": null,
+      "answer": {
+        "status": "insufficient_evidence",
+        "text": "I couldn’t find enough evidence in the retrieved paper text to answer that.",
+        "citations": []
+      },
+      "support_quotes": [],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-s5c4c666e-g26-c0-8cbdeae7cd7b",
+          "page": 7,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c1-2d0d1ae0f00f",
+          "page": 8,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p1-sd21b4a64-g1-c1-65389dcb8b8d",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c0-905961adb847",
+          "page": 8,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s2ae8de3a-g28-c0-e177621fc405",
+          "page": 8,
+          "section": "Model Variations"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p1-sd21b4a64-g1-c0-ad65c9963b57",
+          "page": 1,
+          "section": "Abstract"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": null,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "T5",
+      "split": "held_out",
+      "paper_id": "1706.03762v1",
+      "question": "What was the accuracy of the Transformer on the ImageNet image-classification benchmark?",
+      "expected_status": "insufficient_evidence",
+      "elapsed_seconds": 16.811,
+      "error": null,
+      "answer": {
+        "status": "insufficient_evidence",
+        "text": "I couldn’t find enough evidence in the retrieved paper text to answer that.",
+        "citations": []
+      },
+      "support_quotes": [],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-sbbec38dc-g24-c1-9ebdc4bd9a0c",
+          "page": 7,
+          "section": "Regularization"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p1-sd21b4a64-g1-c0-ad65c9963b57",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c1-2d0d1ae0f00f",
+          "page": 8,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p10-s89db2ad8-g31-c1-43b230d66eaf",
+          "page": 10,
+          "section": "Conclusion"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-s5c4c666e-g26-c0-8cbdeae7cd7b",
+          "page": 7,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c0-905961adb847",
+          "page": 8,
+          "section": "Machine Translation"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": null,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "Q1",
+      "split": "held_out",
+      "paper_id": "2305.14314v1",
+      "question": "What size model can QLoRA finetune on a single 48GB GPU?",
+      "expected_status": "answered",
+      "elapsed_seconds": 10.556,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "QLoRA can finetune a 65B parameter model on a single 48GB GPU, reducing the required memory from >780GB to <48GB without degrading performance.",
+        "citations": [
+          {
+            "chunk_id": "2305.14314v1-33a4e757c19d-p1-sd21b4a64-g1-c0-25f3b98821b4",
+            "arxiv_id": "2305.14314",
+            "version": 1,
+            "page": 1,
+            "section": "Abstract"
+          },
+          {
+            "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c0-b8e966492f8e",
+            "arxiv_id": "2305.14314",
+            "version": 1,
+            "page": 2,
+            "section": "Introduction"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p1-sd21b4a64-g1-c0-25f3b98821b4",
+          "source_quote": "Abstract We present QLORA, an efficient finetuning approach that reduces memory us-age enough to finetune a 65B parameter model on a single 48GB GPU while preserving full 16-bit finetuning task performance."
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c0-b8e966492f8e",
+          "source_quote": "QLORA reduces the average memory requirements of finetuning a 65B parameter model from >780GB of GPU memory to <48GB without degrading the runtime or predictive performance compared to a 16-bit fully finetuned baseline."
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p1-sd21b4a64-g1-c0-25f3b98821b4",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p6-sc14df8a2-g11-c1-0afee1c10d20",
+          "page": 6,
+          "section": "QLoRA vs. Standard Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p5-sc14df8a2-g10-c0-488157594155",
+          "page": 5,
+          "section": "QLoRA vs. Standard Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p5-sd6861fe5-g9-c1-375d405a6df5",
+          "page": 5,
+          "section": "and the second level of quantization constants cFP32"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c0-b8e966492f8e",
+          "page": 2,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p26-s830a6df2-g47-c0-02a32c879728",
+          "page": 26,
+          "section": "Memory Footprint"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": true,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "Q2",
+      "split": "held_out",
+      "paper_id": "2305.14314v1",
+      "question": "What is the purpose of QLoRA's 4-bit NormalFloat (NF4) data type?",
+      "expected_status": "answered",
+      "elapsed_seconds": 9.206,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "The 4-bit NormalFloat (NF4) data type in QLoRA is designed to be information theoretically optimal for normally distributed weights, aiming to reduce memory usage without sacrificing performance.",
+        "citations": [
+          {
+            "chunk_id": "2305.14314v1-33a4e757c19d-p1-sd21b4a64-g1-c0-25f3b98821b4",
+            "arxiv_id": "2305.14314",
+            "version": 1,
+            "page": 1,
+            "section": "Abstract"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p1-sd21b4a64-g1-c0-25f3b98821b4",
+          "source_quote": "QLORA introduces a number of innovations to save memory without sacrificing performance: (a) 4-bit NormalFloat (NF4), a new data type that is information theoretically optimal for normally distributed weights (b) Double Quantization to reduce the average"
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p1-sd21b4a64-g1-c0-25f3b98821b4",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p4-sfccfd817-g7-c0-58e13c13bae4",
+          "page": 4,
+          "section": "QLORA Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p5-sc14df8a2-g10-c0-488157594155",
+          "page": 5,
+          "section": "QLoRA vs. Standard Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p4-sfccfd817-g7-c1-a3d58d571989",
+          "page": 4,
+          "section": "QLORA Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p7-sc14df8a2-g12-c4-b75a129aa776",
+          "page": 7,
+          "section": "QLoRA vs. Standard Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p24-sfa13ce2d-g43-c0-97494c3b2bc1",
+          "page": 24,
+          "section": "NormalFloat 4-bit data type"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": true,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "Q3",
+      "split": "held_out",
+      "paper_id": "2305.14314v1",
+      "question": "Which three benchmarks does QLoRA explicitly say it did not evaluate?",
+      "expected_status": "answered",
+      "elapsed_seconds": 0.355,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "The paper did not evaluate BigBench, RAFT, and HELM.",
+        "citations": [
+          {
+            "chunk_id": "2305.14314v1-33a4e757c19d-p15-sf7354dab-g25-c0-ef6ce9973c03",
+            "arxiv_id": "2305.14314",
+            "version": 1,
+            "page": 15,
+            "section": "Limitations and Discussion"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p15-sf7354dab-g25-c0-ef6ce9973c03",
+          "source_quote": "While we provide evaluations on MMLU, the Vicuna benchmark, and the OA benchmark, we did not evaluate on other benchmarks such as BigBench, RAFT, and HELM, and it is not ensured that our evaluations generalize to these benchmarks."
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p15-sf7354dab-g25-c0-ef6ce9973c03",
+          "page": 15,
+          "section": "Limitations and Discussion"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": true,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "Q4",
+      "split": "held_out",
+      "paper_id": "2305.14314v1",
+      "question": "What percentage of ChatGPT performance did Guanaco achieve on the HELM benchmark?",
+      "expected_status": "insufficient_evidence",
+      "elapsed_seconds": 0.049,
+      "error": null,
+      "answer": {
+        "status": "insufficient_evidence",
+        "text": "I couldn’t find enough evidence in the retrieved paper text to answer that.",
+        "citations": []
+      },
+      "support_quotes": [],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c1-1f4de26f9b06",
+          "page": 2,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p9-s163e44b1-g16-c5-5333e3209bd7",
+          "page": 9,
+          "section": "Evaluation"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p11-s5fc5a079-g19-c0-edfba9168cc5",
+          "page": 11,
+          "section": "Qualitative Analysis"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p25-sed843612-g45-c2-1a1d144bf118",
+          "page": 25,
+          "section": "Normality of Trained Neural Network Weights"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p10-s163e44b1-g17-c0-0141bae17cfd",
+          "page": 10,
+          "section": "Evaluation"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p10-s163e44b1-g17-c6-e5da40351fbd",
+          "page": 10,
+          "section": "Evaluation"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": null,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "Q5",
+      "split": "held_out",
+      "paper_id": "2305.14314v1",
+      "question": "How much did the 48GB GPU cost when QLoRA was published?",
+      "expected_status": "insufficient_evidence",
+      "elapsed_seconds": 6.075,
+      "error": null,
+      "answer": {
+        "status": "insufficient_evidence",
+        "text": "I couldn’t find enough evidence in the retrieved paper text to answer that.",
+        "citations": []
+      },
+      "support_quotes": [],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p6-sc14df8a2-g11-c1-0afee1c10d20",
+          "page": 6,
+          "section": "QLoRA vs. Standard Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p1-sd21b4a64-g1-c0-25f3b98821b4",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p5-sc14df8a2-g10-c0-488157594155",
+          "page": 5,
+          "section": "QLoRA vs. Standard Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c0-b8e966492f8e",
+          "page": 2,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p5-sd6861fe5-g9-c1-375d405a6df5",
+          "page": 5,
+          "section": "and the second level of quantization constants cFP32"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p7-sc14df8a2-g12-c3-c3f1b385a1cc",
+          "page": 7,
+          "section": "QLoRA vs. Standard Finetuning"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": null,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    }
+  ]
+}

@@ -1,0 +1,325 @@
+{
+  "schema_version": 1,
+  "started_at": "2026-09-26T07:34:54.964472+00:00",
+  "model": "qwen2.5:3b",
+  "split": "development",
+  "results": [
+    {
+      "id": "L1",
+      "split": "development",
+      "paper_id": "2106.09685v1",
+      "question": "What does LoRA freeze during training?",
+      "expected_status": "answered",
+      "elapsed_seconds": 24.609,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "LoRA freezes the pre-trained model weights and injects trainable rank decomposition matrices into each layer of the Transformer architecture, reducing the number of trainable parameters for downstream tasks.",
+        "citations": [
+          {
+            "chunk_id": "2106.09685v1-38a259c1926b-p1-sd21b4a64-g1-c0-972beeac623f",
+            "arxiv_id": "2106.09685",
+            "version": 1,
+            "page": 1,
+            "section": "Abstract"
+          },
+          {
+            "chunk_id": "2106.09685v1-38a259c1926b-p5-sb5a4beff-g12-c3-eb9415e5887c",
+            "arxiv_id": "2106.09685",
+            "version": 1,
+            "page": 5,
+            "section": "Baselines"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p1-sd21b4a64-g1-c0-972beeac623f",
+          "source_quote": "We propose Low-Rank Adaptation, or LoRA, which freezes the pre-trained model weights and injects trainable rank decomposition matrices into each layer of the Transformer architecture, greatly reducing the number of trainable parameters for downstream tasks."
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p5-sb5a4beff-g12-c3-eb9415e5887c",
+          "source_quote": "LoRA adds trainable pairs of rank decomposition matrices to existing weight matrices."
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p1-sd21b4a64-g1-c0-972beeac623f",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p2-sb605350b-g3-c0-0f53ca0f04dd",
+          "page": 2,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p4-s5fb49221-g8-c1-2ebcaca342c0",
+          "page": 4,
+          "section": "Applying LoRA to Transformer"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p14-s31b344d0-g34-c2-9ca559c1b404",
+          "page": 14,
+          "section": "Combining LoRA with Prefix Tuning"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p5-sb5a4beff-g12-c3-eb9415e5887c",
+          "page": 5,
+          "section": "Baselines"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p6-s491232f4-g14-c3-5db3f892da47",
+          "page": 6,
+          "section": "Performance on GPT-3"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": true,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "L2",
+      "split": "development",
+      "paper_id": "2106.09685v1",
+      "question": "For GPT-3, by how much can LoRA reduce trainable parameters compared with full fine-tuning?",
+      "expected_status": "answered",
+      "elapsed_seconds": 18.196,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "LoRA can reduce the number of trainable parameters by 10,000 times compared to full fine-tuning for GPT-3.",
+        "citations": [
+          {
+            "chunk_id": "2106.09685v1-38a259c1926b-p1-sd21b4a64-g1-c0-972beeac623f",
+            "arxiv_id": "2106.09685",
+            "version": 1,
+            "page": 1,
+            "section": "Abstract"
+          },
+          {
+            "chunk_id": "2106.09685v1-38a259c1926b-p5-s491232f4-g13-c0-371aa1fba058",
+            "arxiv_id": "2106.09685",
+            "version": 1,
+            "page": 5,
+            "section": "Performance on GPT-3"
+          },
+          {
+            "chunk_id": "2106.09685v1-38a259c1926b-p15-sed5f806d-g38-c1-3b370895cef8",
+            "arxiv_id": "2106.09685",
+            "version": 1,
+            "page": 15,
+            "section": "Low-Data Regime"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p1-sd21b4a64-g1-c0-972beeac623f",
+          "source_quote": "For GPT-3, LoRA can reduce the number of trainable parameters by 10,000 times and the computation hardware requirement by 3 times compared to full fine-tuning."
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p5-s491232f4-g13-c0-371aa1fba058",
+          "source_quote": "5.2 Performance on GPT-3 Hyperparameters For all of our GPT-3 experiments, we train using AdamW [26] for 2 epochs with a batch size of 100k tokens, a sequence length of 768, and a weight decay factor of 0.1."
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p15-sed5f806d-g38-c1-3b370895cef8",
+          "source_quote": "which might suggest that prefix-based approaches are not suitable for low-data tasks in GPT-3."
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p1-sd21b4a64-g1-c0-972beeac623f",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p4-s5fb49221-g8-c0-2d080e50bfcf",
+          "page": 4,
+          "section": "Applying LoRA to Transformer"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p5-s491232f4-g13-c0-371aa1fba058",
+          "page": 5,
+          "section": "Performance on GPT-3"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p15-sed5f806d-g38-c1-3b370895cef8",
+          "page": 15,
+          "section": "Low-Data Regime"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p14-s31b344d0-g34-c2-9ca559c1b404",
+          "page": 14,
+          "section": "Combining LoRA with Prefix Tuning"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p1-sd21b4a64-g1-c1-ece5659befeb",
+          "page": 1,
+          "section": "Abstract"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": true,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "L3",
+      "split": "development",
+      "paper_id": "2106.09685v1",
+      "question": "What batching limitation does LoRA explicitly report?",
+      "expected_status": "answered",
+      "elapsed_seconds": 16.905,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "LoRA explicitly reports a limitation where it is not straightforward to batch inputs to different tasks with different A and B in a single forward pass.",
+        "citations": [
+          {
+            "chunk_id": "2106.09685v1-38a259c1926b-p4-s5fb49221-g8-c1-2ebcaca342c0",
+            "arxiv_id": "2106.09685",
+            "version": 1,
+            "page": 4,
+            "section": "Applying LoRA to Transformer"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p4-s5fb49221-g8-c1-2ebcaca342c0",
+          "source_quote": "For example, it is not straightforward to batch inputs to different tasks with different A and B in a single forward pass, because we absorb A and B into W to prevent additional inference latency."
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p4-s5fb49221-g8-c1-2ebcaca342c0",
+          "page": 4,
+          "section": "Applying LoRA to Transformer"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p5-s491232f4-g13-c0-371aa1fba058",
+          "page": 5,
+          "section": "Performance on GPT-3"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p14-s31b344d0-g34-c2-9ca559c1b404",
+          "page": 14,
+          "section": "Combining LoRA with Prefix Tuning"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p2-sb605350b-g3-c1-d7b13ef31e53",
+          "page": 2,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p15-sed5f806d-g38-c1-3b370895cef8",
+          "page": 15,
+          "section": "Low-Data Regime"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p6-s491232f4-g14-c3-5db3f892da47",
+          "page": 6,
+          "section": "Performance on GPT-3"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": true,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "L4",
+      "split": "development",
+      "paper_id": "2106.09685v1",
+      "question": "What is the first author's favorite food?",
+      "expected_status": "insufficient_evidence",
+      "elapsed_seconds": 11.491,
+      "error": null,
+      "answer": {
+        "status": "insufficient_evidence",
+        "text": "I couldn’t find enough evidence in the retrieved paper text to answer that.",
+        "citations": []
+      },
+      "support_quotes": [],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p7-sf77bac32-g18-c1-45eb44ba2ef4",
+          "page": 7,
+          "section": "Which Weight Matrices in Transformer Should We Apply LoRA to?"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p8-s190fd645-g19-c4-aa4f3a967e6c",
+          "page": 8,
+          "section": "What is the Optimal Rank r for LoRA?"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p10-s4be0f860-g24-c0-b652423a9940",
+          "page": 10,
+          "section": "Acknowledgments"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": null,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "L5",
+      "split": "development",
+      "paper_id": "2106.09685v1",
+      "question": "What ImageNet classification accuracy did the LoRA GPT-3 experiment report?",
+      "expected_status": "insufficient_evidence",
+      "elapsed_seconds": 22.04,
+      "error": null,
+      "answer": {
+        "status": "insufficient_evidence",
+        "text": "I couldn’t find enough evidence in the retrieved paper text to answer that.",
+        "citations": []
+      },
+      "support_quotes": [],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p5-s491232f4-g13-c0-371aa1fba058",
+          "page": 5,
+          "section": "Performance on GPT-3"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p7-sf77bac32-g18-c1-45eb44ba2ef4",
+          "page": 7,
+          "section": "Which Weight Matrices in Transformer Should We Apply LoRA to?"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p6-s491232f4-g14-c1-2d8caf08844b",
+          "page": 6,
+          "section": "Performance on GPT-3"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p6-s491232f4-g14-c3-5db3f892da47",
+          "page": 6,
+          "section": "Performance on GPT-3"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p6-sd59a25b2-g15-c0-35cb5eff1f08",
+          "page": 6,
+          "section": "Performance on GPT-2"
+        },
+        {
+          "chunk_id": "2106.09685v1-38a259c1926b-p14-se7bd5a65-g33-c1-59a24ea201fb",
+          "page": 14,
+          "section": "GPT-2 LoRA"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": null,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    }
+  ]
+}

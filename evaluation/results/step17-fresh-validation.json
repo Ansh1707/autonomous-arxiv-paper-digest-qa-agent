@@ -1,0 +1,604 @@
+{
+  "schema_version": 1,
+  "started_at": "2026-09-26T12:10:35.320301+00:00",
+  "model": "qwen2.5:3b",
+  "split": "all",
+  "results": [
+    {
+      "id": "FV-T1",
+      "split": "challenge",
+      "paper_id": "1706.03762v1",
+      "question": "What beta-2 value did the Transformer paper use with Adam?",
+      "expected_status": "answered",
+      "elapsed_seconds": 33.522,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "The Transformer paper used β2 = 0.98 with Adam optimizer.",
+        "citations": [
+          {
+            "chunk_id": "1706.03762v1-0a9bff1be357-p7-s2ee6172f-g23-c0-a7bfb2dfc986",
+            "arxiv_id": "1706.03762",
+            "version": 1,
+            "page": 7,
+            "section": "Optimizer"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-s2ee6172f-g23-c0-a7bfb2dfc986",
+          "source_quote": "5.3 Optimizer We used the Adam optimizer [18] with β1 = 0.9, β2 = 0.98 and ε = 10−9."
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s2ae8de3a-g28-c0-e177621fc405",
+          "page": 8,
+          "section": "Model Variations"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p2-sea2b8a87-g4-c0-7ee552ee1658",
+          "page": 2,
+          "section": "Background"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-s2ee6172f-g23-c0-a7bfb2dfc986",
+          "page": 7,
+          "section": "Optimizer"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-s5c4c666e-g26-c0-8cbdeae7cd7b",
+          "page": 7,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c1-2d0d1ae0f00f",
+          "page": 8,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c0-905961adb847",
+          "page": 8,
+          "section": "Machine Translation"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": true,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "FV-T2",
+      "split": "challenge",
+      "paper_id": "1706.03762v1",
+      "question": "What label-smoothing value did the Transformer use during training?",
+      "expected_status": "answered",
+      "elapsed_seconds": 20.713,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "The Transformer used a label smoothing value of εls = 0.1 during training, as stated in the paper.",
+        "citations": [
+          {
+            "chunk_id": "1706.03762v1-0a9bff1be357-p7-sbbec38dc-g24-c1-9ebdc4bd9a0c",
+            "arxiv_id": "1706.03762",
+            "version": 1,
+            "page": 7,
+            "section": "Regularization"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-sbbec38dc-g24-c1-9ebdc4bd9a0c",
+          "source_quote": "Label Smoothing During training, we employed label smoothing of value εls = 0.1 [32]."
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-sbbec38dc-g24-c1-9ebdc4bd9a0c",
+          "page": 7,
+          "section": "Regularization"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s2ae8de3a-g28-c0-e177621fc405",
+          "page": 8,
+          "section": "Model Variations"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c0-905961adb847",
+          "page": 8,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c1-2d0d1ae0f00f",
+          "page": 8,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-s5c4c666e-g26-c0-8cbdeae7cd7b",
+          "page": 7,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p1-sd21b4a64-g1-c1-65389dcb8b8d",
+          "page": 1,
+          "section": "Abstract"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": true,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "FV-T3",
+      "split": "challenge",
+      "paper_id": "1706.03762v1",
+      "question": "What beam size did the Transformer use for translation inference?",
+      "expected_status": "answered",
+      "elapsed_seconds": 18.687,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "The Transformer used a beam size of 4 for translation inference, as mentioned in the section about base models.",
+        "citations": [
+          {
+            "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c2-8cbc4bcf128f",
+            "arxiv_id": "1706.03762",
+            "version": 1,
+            "page": 8,
+            "section": "Machine Translation"
+          },
+          {
+            "chunk_id": "1706.03762v1-0a9bff1be357-p7-s5c4c666e-g26-c0-8cbdeae7cd7b",
+            "arxiv_id": "1706.03762",
+            "version": 1,
+            "page": 7,
+            "section": "Machine Translation"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c2-8cbc4bcf128f",
+          "source_quote": "We used beam search with a beam size of 4 and length penalty α = 0.6 [34]."
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-s5c4c666e-g26-c0-8cbdeae7cd7b",
+          "source_quote": "6.1 Machine Translation On the WMT 2014 English-to-German translation task, Our big transformer model (Transformer (big) in Table 2) outperforms the best previously reported models (including ensembles) by more than 2.0 BLEU, establishing a new state-of-the-art BLEU score of 28.4."
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c2-8cbc4bcf128f",
+          "page": 8,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p9-sd1ecdb7f-g30-c3-4e9a7854f99c",
+          "page": 9,
+          "section": "English Constituency Parsing"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s2ae8de3a-g28-c0-e177621fc405",
+          "page": 8,
+          "section": "Model Variations"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-s5c4c666e-g26-c0-8cbdeae7cd7b",
+          "page": 7,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c1-2d0d1ae0f00f",
+          "page": 8,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p10-s89db2ad8-g31-c1-43b230d66eaf",
+          "page": 10,
+          "section": "Conclusion"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": true,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "FV-T4",
+      "split": "challenge",
+      "paper_id": "1706.03762v1",
+      "question": "What BLEU score did Transformer big report for English-to-Italian translation?",
+      "expected_status": "insufficient_evidence",
+      "elapsed_seconds": 0.287,
+      "error": null,
+      "answer": {
+        "status": "insufficient_evidence",
+        "text": "I couldn’t find enough evidence in the retrieved paper text to answer that.",
+        "citations": []
+      },
+      "support_quotes": [],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-s5c4c666e-g26-c0-8cbdeae7cd7b",
+          "page": 7,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c1-2d0d1ae0f00f",
+          "page": 8,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p1-sd21b4a64-g1-c1-65389dcb8b8d",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c0-905961adb847",
+          "page": 8,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s2ae8de3a-g28-c0-e177621fc405",
+          "page": 8,
+          "section": "Model Variations"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p9-sd1ecdb7f-g30-c0-03eaa3bf4b8a",
+          "page": 9,
+          "section": "English Constituency Parsing"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": null,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "FV-T5",
+      "split": "challenge",
+      "paper_id": "1706.03762v1",
+      "question": "What F1 score did the Transformer report on SQuAD question answering?",
+      "expected_status": "insufficient_evidence",
+      "elapsed_seconds": 18.025,
+      "error": null,
+      "answer": {
+        "status": "insufficient_evidence",
+        "text": "I couldn’t find enough evidence in the retrieved paper text to answer that.",
+        "citations": []
+      },
+      "support_quotes": [],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-s5c4c666e-g26-c0-8cbdeae7cd7b",
+          "page": 7,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p9-sd1ecdb7f-g30-c4-4aed3f746905",
+          "page": 9,
+          "section": "English Constituency Parsing"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p1-sd21b4a64-g1-c1-65389dcb8b8d",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p9-sd1ecdb7f-g30-c1-14799058985a",
+          "page": 9,
+          "section": "English Constituency Parsing"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s2ae8de3a-g28-c0-e177621fc405",
+          "page": 8,
+          "section": "Model Variations"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c1-2d0d1ae0f00f",
+          "page": 8,
+          "section": "Machine Translation"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": null,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "FV-Q1",
+      "split": "challenge",
+      "paper_id": "2305.14314v1",
+      "question": "For what kind of weight distribution is QLoRA's NF4 data type information-theoretically optimal?",
+      "expected_status": "answered",
+      "elapsed_seconds": 19.714,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "QLORA's NF4 data type is information-theoretically optimal for normally distributed weights, as stated in the passage.",
+        "citations": [
+          {
+            "chunk_id": "2305.14314v1-33a4e757c19d-p1-sd21b4a64-g1-c0-25f3b98821b4",
+            "arxiv_id": "2305.14314",
+            "version": 1,
+            "page": 1,
+            "section": "Abstract"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p1-sd21b4a64-g1-c0-25f3b98821b4",
+          "source_quote": "QLORA introduces a number of innovations to save memory without sacrificing performance: (a) 4-bit NormalFloat (NF4), a new data type that is information theoretically optimal for normally distributed weights (b) Double Quantization to reduce the average"
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p1-sd21b4a64-g1-c0-25f3b98821b4",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p1-sd21b4a64-g1-c1-4e97cd764dd0",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p4-sfccfd817-g7-c1-a3d58d571989",
+          "page": 4,
+          "section": "QLORA Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p7-sc14df8a2-g12-c4-b75a129aa776",
+          "page": 7,
+          "section": "QLoRA vs. Standard Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p5-sc14df8a2-g10-c0-488157594155",
+          "page": 5,
+          "section": "QLoRA vs. Standard Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p6-sc14df8a2-g11-c0-f42daf69e7f1",
+          "page": 6,
+          "section": "QLoRA vs. Standard Finetuning"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": true,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "FV-Q2",
+      "split": "challenge",
+      "paper_id": "2305.14314v1",
+      "question": "How many instruction datasets did the QLoRA paper analyze?",
+      "expected_status": "answered",
+      "elapsed_seconds": 18.108,
+      "error": null,
+      "answer": {
+        "status": "insufficient_evidence",
+        "text": "I couldn’t find enough evidence in the retrieved paper text to answer that.",
+        "citations": []
+      },
+      "support_quotes": [],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c4-f862156eb521",
+          "page": 2,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p14-s963a0e1c-g23-c1-8f473c4f86ce",
+          "page": 14,
+          "section": "Related Work"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p22-s842531ab-g34-c0-5a54df3e6935",
+          "page": 22,
+          "section": "QLoRA vs Standard Finetuning Experimental Setup Details"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p23-se9faf7b7-g39-c1-618d236f5307",
+          "page": 23,
+          "section": "Datasets"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p7-sc14df8a2-g12-c5-80f768cd7217",
+          "page": 7,
+          "section": "QLoRA vs. Standard Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p23-se9faf7b7-g39-c3-a1750f43e42e",
+          "page": 23,
+          "section": "Datasets"
+        }
+      ],
+      "status_pass": false,
+      "retrieval_hit": false,
+      "fact_pass": false,
+      "citation_pass": false,
+      "pass_automated": false
+    },
+    {
+      "id": "FV-Q3",
+      "split": "challenge",
+      "paper_id": "2305.14314v1",
+      "question": "According to the paper, what GPU memory and training time suffice for Guanaco 33B?",
+      "expected_status": "answered",
+      "elapsed_seconds": 27.052,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "QLORA, a method introduced in the paper, allows for the finetuning of a 65B parameter model on a single 48GB GPU, demonstrating that 48GB GPU memory suffices for such a task.",
+        "citations": [
+          {
+            "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c0-b8e966492f8e",
+            "arxiv_id": "2305.14314",
+            "version": 1,
+            "page": 2,
+            "section": "Introduction"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c0-b8e966492f8e",
+          "source_quote": "QLORA reduces the average memory requirements of finetuning a 65B parameter model from >780GB of GPU memory to <48GB without degrading the runtime or predictive performance compared to a 16-bit fully finetuned baseline."
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p1-sb605350b-g2-c0-60a2fd20d3d3",
+          "page": 1,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c0-b8e966492f8e",
+          "page": 2,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c1-1f4de26f9b06",
+          "page": 2,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p26-s830a6df2-g47-c0-02a32c879728",
+          "page": 26,
+          "section": "Memory Footprint"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p6-sc14df8a2-g11-c1-0afee1c10d20",
+          "page": 6,
+          "section": "QLoRA vs. Standard Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p1-sd21b4a64-g1-c0-25f3b98821b4",
+          "page": 1,
+          "section": "Abstract"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": false,
+      "fact_pass": false,
+      "citation_pass": false,
+      "pass_automated": false
+    },
+    {
+      "id": "FV-Q4",
+      "split": "challenge",
+      "paper_id": "2305.14314v1",
+      "question": "What accuracy did QLoRA report on the GLUE benchmark?",
+      "expected_status": "insufficient_evidence",
+      "elapsed_seconds": 20.377,
+      "error": null,
+      "answer": {
+        "status": "insufficient_evidence",
+        "text": "I couldn’t find enough evidence in the retrieved paper text to answer that.",
+        "citations": []
+      },
+      "support_quotes": [],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p8-s163e44b1-g15-c0-3271073b3a83",
+          "page": 8,
+          "section": "Evaluation"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p6-sc14df8a2-g11-c0-f42daf69e7f1",
+          "page": 6,
+          "section": "QLoRA vs. Standard Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p7-sc14df8a2-g12-c0-e9f439a2dc6b",
+          "page": 7,
+          "section": "QLoRA vs. Standard Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p22-s842531ab-g34-c0-5a54df3e6935",
+          "page": 22,
+          "section": "QLoRA vs Standard Finetuning Experimental Setup Details"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p7-sc14df8a2-g12-c1-0608fe3e3204",
+          "page": 7,
+          "section": "QLoRA vs. Standard Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p5-sc14df8a2-g10-c0-488157594155",
+          "page": 5,
+          "section": "QLoRA vs. Standard Finetuning"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": null,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "FV-Q5",
+      "split": "challenge",
+      "paper_id": "2305.14314v1",
+      "question": "What exact US-dollar cost did the authors report for finetuning Guanaco 65B?",
+      "expected_status": "insufficient_evidence",
+      "elapsed_seconds": 19.758,
+      "error": null,
+      "answer": {
+        "status": "insufficient_evidence",
+        "text": "I couldn’t find enough evidence in the retrieved paper text to answer that.",
+        "citations": []
+      },
+      "support_quotes": [],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p14-s5fc5a079-g22-c0-d04d21fd6903",
+          "page": 14,
+          "section": "Qualitative Analysis"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p15-sf7354dab-g25-c0-ef6ce9973c03",
+          "page": 15,
+          "section": "Limitations and Discussion"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p13-s5fc5a079-g21-c1-911484ca427e",
+          "page": 13,
+          "section": "Qualitative Analysis"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p13-s5fc5a079-g21-c0-1877138f4a4c",
+          "page": 13,
+          "section": "Qualitative Analysis"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c1-1f4de26f9b06",
+          "page": 2,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p11-s5fc5a079-g19-c4-1197f8742d42",
+          "page": 11,
+          "section": "Qualitative Analysis"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": null,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    }
+  ]
+}

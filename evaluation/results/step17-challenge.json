@@ -1,0 +1,628 @@
+{
+  "schema_version": 1,
+  "started_at": "2026-09-26T10:37:27.303139+00:00",
+  "model": "qwen2.5:3b",
+  "split": "all",
+  "results": [
+    {
+      "id": "TC1",
+      "split": "challenge",
+      "paper_id": "1706.03762v1",
+      "question": "How many identical layers are in the Transformer encoder stack?",
+      "expected_status": "answered",
+      "elapsed_seconds": 19.814,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "The Transformer encoder stack consists of a stack of 6 identical layers.",
+        "citations": [
+          {
+            "chunk_id": "1706.03762v1-0a9bff1be357-p2-s1167fb8b-g6-c0-6844c503b6f2",
+            "arxiv_id": "1706.03762",
+            "version": 1,
+            "page": 2,
+            "section": "Encoder and Decoder Stacks"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p2-s1167fb8b-g6-c0-6844c503b6f2",
+          "source_quote": "3.1 Encoder and Decoder Stacks Encoder: The encoder is composed of a stack of N = 6 identical layers."
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p2-s1167fb8b-g6-c0-6844c503b6f2",
+          "page": 2,
+          "section": "Encoder and Decoder Stacks"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p2-s1167fb8b-g6-c1-1347292f4d19",
+          "page": 2,
+          "section": "Encoder and Decoder Stacks"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p2-s8f572f78-g5-c0-e0552706aae9",
+          "page": 2,
+          "section": "Model Architecture"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p3-s1167fb8b-g7-c0-eaeff7d1b0da",
+          "page": 3,
+          "section": "Encoder and Decoder Stacks"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p5-s7e63ef44-g14-c0-62a80b7b731c",
+          "page": 5,
+          "section": "Position-wise Feed-Forward Networks"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p4-s45e97de4-g12-c0-3c4114b62543",
+          "page": 4,
+          "section": "Applications of Attention in our Model"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": true,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "TC2",
+      "split": "challenge",
+      "paper_id": "1706.03762v1",
+      "question": "What residual dropout rate is used for the Transformer base model?",
+      "expected_status": "answered",
+      "elapsed_seconds": 25.872,
+      "error": null,
+      "answer": {
+        "status": "insufficient_evidence",
+        "text": "I couldn’t find enough evidence in the retrieved paper text to answer that.",
+        "citations": []
+      },
+      "support_quotes": [],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p9-sd1ecdb7f-g30-c3-4e9a7854f99c",
+          "page": 9,
+          "section": "English Constituency Parsing"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c1-2d0d1ae0f00f",
+          "page": 8,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c2-8cbc4bcf128f",
+          "page": 8,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c0-905961adb847",
+          "page": 8,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s2ae8de3a-g28-c0-e177621fc405",
+          "page": 8,
+          "section": "Model Variations"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-s5c4c666e-g26-c0-8cbdeae7cd7b",
+          "page": 7,
+          "section": "Machine Translation"
+        }
+      ],
+      "status_pass": false,
+      "retrieval_hit": false,
+      "fact_pass": false,
+      "citation_pass": false,
+      "pass_automated": false
+    },
+    {
+      "id": "TC3",
+      "split": "challenge",
+      "paper_id": "1706.03762v1",
+      "question": "How many warmup steps does the Transformer learning-rate schedule use?",
+      "expected_status": "answered",
+      "elapsed_seconds": 14.678,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "The Transformer learning-rate schedule uses warmup_steps = 4000 steps.",
+        "citations": [
+          {
+            "chunk_id": "1706.03762v1-0a9bff1be357-p7-s2ee6172f-g23-c0-a7bfb2dfc986",
+            "arxiv_id": "1706.03762",
+            "version": 1,
+            "page": 7,
+            "section": "Optimizer"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-s2ee6172f-g23-c0-a7bfb2dfc986",
+          "source_quote": "We used warmup_steps = 4000."
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-s2ee6172f-g23-c0-a7bfb2dfc986",
+          "page": 7,
+          "section": "Optimizer"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p5-s428ace73-g16-c0-c4c81ef78ded",
+          "page": 5,
+          "section": "Positional Encoding"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-s5f935617-g22-c0-5f0f5b4e4ac8",
+          "page": 7,
+          "section": "Hardware and Schedule"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p1-sd21b4a64-g1-c1-65389dcb8b8d",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p6-s36a798e3-g19-c0-2f3a89c14f29",
+          "page": 6,
+          "section": "Training"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c2-8cbc4bcf128f",
+          "page": 8,
+          "section": "Machine Translation"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": true,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "TC4",
+      "split": "challenge",
+      "paper_id": "1706.03762v1",
+      "question": "What ROUGE-L score did the Transformer report on CNN/DailyMail summarization?",
+      "expected_status": "insufficient_evidence",
+      "elapsed_seconds": 18.939,
+      "error": null,
+      "answer": {
+        "status": "insufficient_evidence",
+        "text": "I couldn’t find enough evidence in the retrieved paper text to answer that.",
+        "citations": []
+      },
+      "support_quotes": [],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-s5c4c666e-g26-c0-8cbdeae7cd7b",
+          "page": 7,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p2-sea2b8a87-g4-c1-e45521cb97fe",
+          "page": 2,
+          "section": "Background"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c1-2d0d1ae0f00f",
+          "page": 8,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s2ae8de3a-g28-c0-e177621fc405",
+          "page": 8,
+          "section": "Model Variations"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p1-sd21b4a64-g1-c1-65389dcb8b8d",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p9-sd1ecdb7f-g30-c0-03eaa3bf4b8a",
+          "page": 9,
+          "section": "English Constituency Parsing"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": null,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "TC5",
+      "split": "challenge",
+      "paper_id": "1706.03762v1",
+      "question": "What BLEU score did Transformer big achieve after replacing its attention layers with LSTMs?",
+      "expected_status": "insufficient_evidence",
+      "elapsed_seconds": 42.28,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "Transformer (big) achieves a BLEU score of 41.0 on the WMT 2014 English-to-French translation task after training for 3.5 days on eight GPUs.",
+        "citations": [
+          {
+            "chunk_id": "1706.03762v1-0a9bff1be357-p1-sd21b4a64-g1-c0-ad65c9963b57",
+            "arxiv_id": "1706.03762",
+            "version": 1,
+            "page": 1,
+            "section": "Abstract"
+          },
+          {
+            "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c1-2d0d1ae0f00f",
+            "arxiv_id": "1706.03762",
+            "version": 1,
+            "page": 8,
+            "section": "Machine Translation"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p1-sd21b4a64-g1-c0-ad65c9963b57",
+          "source_quote": "On the WMT 2014 English-to-French translation task, our model establishes a new single-model state-of-the-art BLEU score of 41.0 after training for 3.5 days on eight GPUs,"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c1-2d0d1ae0f00f",
+          "source_quote": "1.2 · 1020 Deep-Att + PosUnk Ensemble [35] 40.4 8.0 · 1020 GNMT + RL Ensemble [34] 26.30 41.16 1.8 · 1020 1.1 · 1021 ConvS2S Ensemble [9] 26.36 41.29 7.7 · 1019 1.2 · 1021 Transformer (base model) 27.3 38.1 3.3 · 1018 Transformer (big) 28.4 41.0 2.3 · 1019 On the WMT 2014 English-to-French translation task, our big model achieves a BLEU score of 41.0, outperforming all of the previously published single models, at less than 1/4 the training cost of the previous state-of-the-art model."
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p10-s89db2ad8-g31-c0-e35ccd31f56c",
+          "page": 10,
+          "section": "Conclusion"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p1-sd21b4a64-g1-c0-ad65c9963b57",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-s5c4c666e-g26-c0-8cbdeae7cd7b",
+          "page": 7,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c1-2d0d1ae0f00f",
+          "page": 8,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p1-sd21b4a64-g1-c1-65389dcb8b8d",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c0-905961adb847",
+          "page": 8,
+          "section": "Machine Translation"
+        }
+      ],
+      "status_pass": false,
+      "retrieval_hit": null,
+      "fact_pass": false,
+      "citation_pass": false,
+      "pass_automated": false
+    },
+    {
+      "id": "QC1",
+      "split": "challenge",
+      "paper_id": "2305.14314v1",
+      "question": "What does QLoRA's Double Quantization quantize to reduce memory use?",
+      "expected_status": "answered",
+      "elapsed_seconds": 29.167,
+      "error": null,
+      "answer": {
+        "status": "insufficient_evidence",
+        "text": "I couldn’t find enough evidence in the retrieved paper text to answer that.",
+        "citations": []
+      },
+      "support_quotes": [],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p1-sd21b4a64-g1-c1-4e97cd764dd0",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c2-da6263be20e5",
+          "page": 2,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p6-sc14df8a2-g11-c6-9da2da63ec0f",
+          "page": 6,
+          "section": "QLoRA vs. Standard Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p3-sb605350b-g4-c0-5ab3fbd304b9",
+          "page": 3,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p4-sfccfd817-g7-c0-58e13c13bae4",
+          "page": 4,
+          "section": "QLORA Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p5-sfccfd817-g8-c1-74655cc8785f",
+          "page": 5,
+          "section": "QLORA Finetuning"
+        }
+      ],
+      "status_pass": false,
+      "retrieval_hit": true,
+      "fact_pass": false,
+      "citation_pass": false,
+      "pass_automated": false
+    },
+    {
+      "id": "QC2",
+      "split": "challenge",
+      "paper_id": "2305.14314v1",
+      "question": "What problem do QLoRA's Paged Optimizers manage?",
+      "expected_status": "answered",
+      "elapsed_seconds": 17.88,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "QLoRA's Paged Optimizers manage memory spikes during the training of large models, ensuring that training can continue even when the GPU runs out-of-memory.",
+        "citations": [
+          {
+            "chunk_id": "2305.14314v1-33a4e757c19d-p1-sd21b4a64-g1-c1-4e97cd764dd0",
+            "arxiv_id": "2305.14314",
+            "version": 1,
+            "page": 1,
+            "section": "Abstract"
+          },
+          {
+            "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c2-da6263be20e5",
+            "arxiv_id": "2305.14314",
+            "version": 1,
+            "page": 2,
+            "section": "Introduction"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p1-sd21b4a64-g1-c1-4e97cd764dd0",
+          "source_quote": "(NF4), a new data type that is information theoretically optimal for normally distributed weights (b) Double Quantization to reduce the average memory footprint by quantizing the quantization constants, and (c) Paged Optimizers to manage memory spikes."
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c2-da6263be20e5",
+          "source_quote": "Model Size Elo GPT-4 -1348 ± 1 Guanaco 65B 41 GB 1022 ± 1 Guanaco 33B 21 GB 992 ± 1 Vicuna 13B 26 GB 974 ± 1 ChatGPT -966 ± 1 Guanaco 13B 10 GB 916 ± 1 Bard -902 ± 1 Guanaco 7B 6 GB 879 ± 1 QLORA introduces multiple innovations designed to reduce memory use without sacrificing per-formance: (1) 4-bit NormalFloat, an information theoretically optimal quantization data type for normally distributed data that yields better empirical results than 4-bit Integers and 4-bit Floats."
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p1-sd21b4a64-g1-c1-4e97cd764dd0",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c2-da6263be20e5",
+          "page": 2,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p6-sc14df8a2-g11-c1-0afee1c10d20",
+          "page": 6,
+          "section": "QLoRA vs. Standard Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p3-sb605350b-g4-c0-5ab3fbd304b9",
+          "page": 3,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p5-sd6861fe5-g9-c1-375d405a6df5",
+          "page": 5,
+          "section": "and the second level of quantization constants cFP32"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p22-s842531ab-g34-c0-5a54df3e6935",
+          "page": 22,
+          "section": "QLoRA vs Standard Finetuning Experimental Setup Details"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": true,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "QC3",
+      "split": "challenge",
+      "paper_id": "2305.14314v1",
+      "question": "How long did the paper say its best Guanaco model family required to finetune on a single GPU?",
+      "expected_status": "answered",
+      "elapsed_seconds": 21.674,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "The Guanaco model family required 24 hours of finetuning on a single GPU to outperform all previous openly released models on the Vicuna benchmark, according to the passage.",
+        "citations": [
+          {
+            "chunk_id": "2305.14314v1-33a4e757c19d-p1-sd21b4a64-g1-c0-25f3b98821b4",
+            "arxiv_id": "2305.14314",
+            "version": 1,
+            "page": 1,
+            "section": "Abstract"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p1-sd21b4a64-g1-c0-25f3b98821b4",
+          "source_quote": "Our best model family, which we name Guanaco, outperforms all previous openly released models on the Vicuna benchmark, reaching 99.3% of the performance level of ChatGPT while only requiring 24 hours of finetuning on a single GPU."
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p1-sd21b4a64-g1-c0-25f3b98821b4",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c1-1f4de26f9b06",
+          "page": 2,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c0-b8e966492f8e",
+          "page": 2,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p26-s830a6df2-g47-c0-02a32c879728",
+          "page": 26,
+          "section": "Memory Footprint"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p5-sc14df8a2-g10-c0-488157594155",
+          "page": 5,
+          "section": "QLoRA vs. Standard Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p6-sc14df8a2-g11-c1-0afee1c10d20",
+          "page": 6,
+          "section": "QLoRA vs. Standard Finetuning"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": true,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "QC4",
+      "split": "challenge",
+      "paper_id": "2305.14314v1",
+      "question": "What ImageNet classification accuracy did Guanaco 65B achieve?",
+      "expected_status": "insufficient_evidence",
+      "elapsed_seconds": 19.893,
+      "error": null,
+      "answer": {
+        "status": "insufficient_evidence",
+        "text": "I couldn’t find enough evidence in the retrieved paper text to answer that.",
+        "citations": []
+      },
+      "support_quotes": [],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c1-1f4de26f9b06",
+          "page": 2,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c3-c7e7e6d28e08",
+          "page": 2,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p9-s163e44b1-g16-c6-edcb0489fbff",
+          "page": 9,
+          "section": "Evaluation"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p7-sc14df8a2-g12-c3-c3f1b385a1cc",
+          "page": 7,
+          "section": "QLoRA vs. Standard Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c0-b8e966492f8e",
+          "page": 2,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c6-1f2d1c3bca66",
+          "page": 2,
+          "section": "Introduction"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": null,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "QC5",
+      "split": "challenge",
+      "paper_id": "2305.14314v1",
+      "question": "By how many percentage points did Guanaco 65B beat GPT-4 on the Vicuna benchmark?",
+      "expected_status": "insufficient_evidence",
+      "elapsed_seconds": 24.698,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "Guanaco 65B beat GPT-4 by 4.4 percentage points on the Vicuna benchmark, as shown in Table 6 of the passage.",
+        "citations": [
+          {
+            "chunk_id": "2305.14314v1-33a4e757c19d-p10-s163e44b1-g17-c0-0141bae17cfd",
+            "arxiv_id": "2305.14314",
+            "version": 1,
+            "page": 10,
+            "section": "Evaluation"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p10-s163e44b1-g17-c0-0141bae17cfd",
+          "source_quote": "Table 6: Zero-shot Vicuna benchmark scores as a percentage of the score obtained by ChatGPT evaluated by GPT-4. We see that OASST1 models perform close to ChatGPT despite being trained on a very small dataset and having a fraction of the memory requirement of baseline models. Model / Dataset Params Model bits Memory ChatGPT vs Sys Sys vs ChatGPT Mean 95% CI GPT-4 ---119.4% 110.1% 114.5% 2.6% Bard ---93.2% 96.4% 94.8% 4.1% Guanaco 65B 4-bit 41 GB 96.7% 101.9% 99.3% 4.4% Alpaca 65B 4-bit 41 GB 63.0% 77.9% 70.7% 4.3% FLAN v2 65B 4-bit 41 GB"
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c1-1f4de26f9b06",
+          "page": 2,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p9-s163e44b1-g16-c6-edcb0489fbff",
+          "page": 9,
+          "section": "Evaluation"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p11-s5fc5a079-g19-c0-edfba9168cc5",
+          "page": 11,
+          "section": "Qualitative Analysis"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p10-s163e44b1-g17-c3-3be1feffbedd",
+          "page": 10,
+          "section": "Evaluation"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c0-b8e966492f8e",
+          "page": 2,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p10-s163e44b1-g17-c0-0141bae17cfd",
+          "page": 10,
+          "section": "Evaluation"
+        }
+      ],
+      "status_pass": false,
+      "retrieval_hit": null,
+      "fact_pass": false,
+      "citation_pass": false,
+      "pass_automated": false
+    }
+  ]
+}

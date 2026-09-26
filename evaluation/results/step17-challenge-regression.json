@@ -1,0 +1,242 @@
+{
+  "schema_version": 1,
+  "started_at": "2026-09-26T11:42:05.163125+00:00",
+  "model": "qwen2.5:3b",
+  "split": "all",
+  "results": [
+    {
+      "id": "TC2",
+      "split": "challenge",
+      "paper_id": "1706.03762v1",
+      "question": "What residual dropout rate is used for the Transformer base model?",
+      "expected_status": "answered",
+      "elapsed_seconds": 37.719,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "The residual dropout rate used for the Transformer base model is 0.1.",
+        "citations": [
+          {
+            "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c2-8cbc4bcf128f",
+            "arxiv_id": "1706.03762",
+            "version": 1,
+            "page": 8,
+            "section": "Machine Translation"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c2-8cbc4bcf128f",
+          "source_quote": "The Transformer (big) model trained for English-to-French used dropout rate Pdrop = 0.1, instead of 0.3."
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-sbbec38dc-g24-c0-81c1ce72f073",
+          "page": 7,
+          "section": "Regularization"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p9-sd1ecdb7f-g30-c3-4e9a7854f99c",
+          "page": 9,
+          "section": "English Constituency Parsing"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c1-2d0d1ae0f00f",
+          "page": 8,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c2-8cbc4bcf128f",
+          "page": 8,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c0-905961adb847",
+          "page": 8,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s2ae8de3a-g28-c0-e177621fc405",
+          "page": 8,
+          "section": "Model Variations"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": true,
+      "fact_pass": true,
+      "citation_pass": false,
+      "pass_automated": false
+    },
+    {
+      "id": "TC5",
+      "split": "challenge",
+      "paper_id": "1706.03762v1",
+      "question": "What BLEU score did Transformer big achieve after replacing its attention layers with LSTMs?",
+      "expected_status": "insufficient_evidence",
+      "elapsed_seconds": 29.48,
+      "error": null,
+      "answer": {
+        "status": "insufficient_evidence",
+        "text": "I couldn’t find enough evidence in the retrieved paper text to answer that.",
+        "citations": []
+      },
+      "support_quotes": [],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p10-s89db2ad8-g31-c0-e35ccd31f56c",
+          "page": 10,
+          "section": "Conclusion"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p1-sd21b4a64-g1-c0-ad65c9963b57",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p7-s5c4c666e-g26-c0-8cbdeae7cd7b",
+          "page": 7,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c1-2d0d1ae0f00f",
+          "page": 8,
+          "section": "Machine Translation"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p1-sd21b4a64-g1-c1-65389dcb8b8d",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "1706.03762v1-0a9bff1be357-p8-s5c4c666e-g27-c0-905961adb847",
+          "page": 8,
+          "section": "Machine Translation"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": null,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "QC1",
+      "split": "challenge",
+      "paper_id": "2305.14314v1",
+      "question": "What does QLoRA's Double Quantization quantize to reduce memory use?",
+      "expected_status": "answered",
+      "elapsed_seconds": 0.459,
+      "error": null,
+      "answer": {
+        "status": "answered",
+        "text": "Double Quantization reduces memory use by quantizing the quantization constants.",
+        "citations": [
+          {
+            "chunk_id": "2305.14314v1-33a4e757c19d-p1-sd21b4a64-g1-c1-4e97cd764dd0",
+            "arxiv_id": "2305.14314",
+            "version": 1,
+            "page": 1,
+            "section": "Abstract"
+          }
+        ]
+      },
+      "support_quotes": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p1-sd21b4a64-g1-c1-4e97cd764dd0",
+          "source_quote": "(NF4), a new data type that is information theoretically optimal for normally distributed weights (b) Double Quantization to reduce the average memory footprint by quantizing the quantization constants, and (c) Paged Optimizers to manage memory spikes."
+        }
+      ],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p1-sd21b4a64-g1-c1-4e97cd764dd0",
+          "page": 1,
+          "section": "Abstract"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c2-da6263be20e5",
+          "page": 2,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p6-sc14df8a2-g11-c6-9da2da63ec0f",
+          "page": 6,
+          "section": "QLoRA vs. Standard Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p3-sb605350b-g4-c0-5ab3fbd304b9",
+          "page": 3,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p4-sfccfd817-g7-c0-58e13c13bae4",
+          "page": 4,
+          "section": "QLORA Finetuning"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p5-sfccfd817-g8-c1-74655cc8785f",
+          "page": 5,
+          "section": "QLORA Finetuning"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": true,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    },
+    {
+      "id": "QC5",
+      "split": "challenge",
+      "paper_id": "2305.14314v1",
+      "question": "By how many percentage points did Guanaco 65B beat GPT-4 on the Vicuna benchmark?",
+      "expected_status": "insufficient_evidence",
+      "elapsed_seconds": 52.58,
+      "error": null,
+      "answer": {
+        "status": "insufficient_evidence",
+        "text": "I couldn’t find enough evidence in the retrieved paper text to answer that.",
+        "citations": []
+      },
+      "support_quotes": [],
+      "retrieved_chunks": [
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c1-1f4de26f9b06",
+          "page": 2,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p9-s163e44b1-g16-c6-edcb0489fbff",
+          "page": 9,
+          "section": "Evaluation"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p11-s5fc5a079-g19-c0-edfba9168cc5",
+          "page": 11,
+          "section": "Qualitative Analysis"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p10-s163e44b1-g17-c3-3be1feffbedd",
+          "page": 10,
+          "section": "Evaluation"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p2-sb605350b-g3-c0-b8e966492f8e",
+          "page": 2,
+          "section": "Introduction"
+        },
+        {
+          "chunk_id": "2305.14314v1-33a4e757c19d-p10-s163e44b1-g17-c0-0141bae17cfd",
+          "page": 10,
+          "section": "Evaluation"
+        }
+      ],
+      "status_pass": true,
+      "retrieval_hit": null,
+      "fact_pass": true,
+      "citation_pass": true,
+      "pass_automated": true
+    }
+  ]
+}
