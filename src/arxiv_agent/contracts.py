@@ -28,6 +28,7 @@ class Stage(StrEnum):
     READY = "qa_ready"
     QA_CHECK = "check_qa_ready"
     RETRIEVE = "retrieve_evidence"
+    REQUERY = "retry_qa_retrieval"
     ANSWER = "answer_question"
     VALIDATE = "validate_answer"
     ERROR = "handle_error"
@@ -314,6 +315,8 @@ class SessionState(Record):
     question: Text | None = None
     retrieval_query: Text | None = None
     retrieved_chunks: list[Chunk] = Field(default_factory=list)
+    qa_retrieval_attempts: int = Field(default=0, ge=0, le=1)
+    qa_retrieval_feedback: Text | None = None
     answer: QAAnswer | None = None
     answer_support_quotes: list[QAQuote] = Field(default_factory=list)
     conversation: list[ConversationTurn] = Field(default_factory=list)

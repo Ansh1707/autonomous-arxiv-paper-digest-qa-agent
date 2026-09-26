@@ -194,6 +194,68 @@ def test_invalid_citation_or_number_repairs_then_abstains(settings, bad):
     assert current.answer.text == ABSTENTION
     assert not current.answer.citations
     assert len(generator.calls) == 2 and generator.calls[1][3]
+    assert current.stage_history.count(Stage.REQUERY) == 1
+    assert current.stage_history.count(Stage.RETRIEVE) == 2
+    assert current.qa_retrieval_attempts == 1
+
+
+def test_failed_draft_retrieves_new_evidence_and_answers(settings):
+    settings = type(settings)(**(
+        settings.model_dump() | {"evidence_chunks": 1}
+    ))
+    first = chunk(1, "Residual dropout is mentioned without a value.")
+    second = chunk(2, "The residual dropout value is 0.1.")
+    bad = answered(text="The residual dropout value is 92.")
+    good = answered(text="The residual dropout value is 0.1.")
+    qa, store, generator = service(settings, [first, second], [bad, bad, good])
+    current = SessionState.model_validate(
+        build_qa_graph(qa, settings).invoke(state("What is the residual dropout value?"))
+    )
+    assert current.answer.status == "answered"
+    assert current.answer.citations[0].chunk_id == second.chunk_id
+    assert current.stage_history.count(Stage.REQUERY) == 1
+    assert current.stage_history.count(Stage.RETRIEVE) == 2
+    assert current.qa_retrieval_attempts == 1
+    assert current.qa_retrieval_feedback is None
+    assert len(generator.calls) == 3
+    assert store.queries[0][0] != store.queries[1][0]
+    assert store.queries[1][1] == 2 * store.queries[0][1]
+
+
+def test_retrieval_recovery_abstains_after_one_new_passage(settings):
+    settings = type(settings)(**(
+        settings.model_dump() | {"evidence_chunks": 1}
+    ))
+    first = chunk(1, "Residual dropout is mentioned without a value.")
+    second = chunk(2, "The residual dropout value is 0.1.")
+    bad = answered(text="The residual dropout value is 92.")
+    qa, store, generator = service(settings, [first, second], [bad])
+    current = SessionState.model_validate(
+        build_qa_graph(qa, settings).invoke(state("What is the residual dropout value?"))
+    )
+    assert current.answer.status == "insufficient_evidence"
+    assert current.answer.citations == []
+    assert current.stage_history.count(Stage.REQUERY) == 1
+    assert current.stage_history.count(Stage.RETRIEVE) == 2
+    assert len(store.queries) == 2
+    assert len(generator.calls) == 4
+
+
+def test_retrieval_recovery_budget_resets_on_next_question(settings):
+    passage = chunk(1, "The method freezes the original weights.")
+    bad = answered(text="The method freezes 92 parameters.")
+    qa, _, generator = service(settings, [passage], [bad])
+    graph = build_qa_graph(qa, settings)
+    current = state()
+    for question in ["What does the method freeze?", "How many parameters does it freeze?"]:
+        current.question = question
+        current = SessionState.model_validate(graph.invoke(current))
+        assert current.answer.status == "insufficient_evidence"
+        assert current.qa_retrieval_attempts == 1
+        assert current.qa_retrieval_feedback is None
+    assert current.stage_history.count(Stage.REQUERY) == 2
+    assert len(current.conversation) == 2
+    assert len(generator.calls) == 4
 
 
 def test_unsupported_question_abstains_without_model_when_no_relevant_chunks(settings):

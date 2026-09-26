@@ -415,6 +415,8 @@ def build_qa_graph(services: WorkflowServices, settings: Settings):
             "answer_support_quotes": [],
             "retrieval_query": None,
             "retrieved_chunks": [],
+            "qa_retrieval_attempts": 0,
+            "qa_retrieval_feedback": None,
             "stage": Stage.QA_CHECK,
             "updated_at": datetime.now(UTC),
             "retry_counts": {
@@ -427,6 +429,16 @@ def build_qa_graph(services: WorkflowServices, settings: Settings):
 
     graph.add_node(Stage.QA_CHECK.value, check_ready)
     graph.add_node(Stage.ERROR.value, _handle_error)
+
+    def retry_retrieval(state: SessionState) -> dict:
+        return {
+            "qa_retrieval_attempts": state.qa_retrieval_attempts + 1,
+            "stage": Stage.REQUERY,
+            "stage_history": [*state.stage_history, Stage.REQUERY],
+            "updated_at": datetime.now(UTC),
+        }
+
+    graph.add_node(Stage.REQUERY.value, retry_retrieval)
     stages = [Stage.RETRIEVE, Stage.ANSWER, Stage.VALIDATE]
     for stage in stages:
         graph.add_node(stage.value, _node(stage, services, settings))
@@ -436,13 +448,37 @@ def build_qa_graph(services: WorkflowServices, settings: Settings):
         lambda state: Stage.ERROR.value if state.error else Stage.RETRIEVE.value,
         [Stage.ERROR.value, Stage.RETRIEVE.value],
     )
-    for current, following in zip(
-        stages, [Stage.ANSWER.value, Stage.VALIDATE.value, END], strict=True
-    ):
-        graph.add_conditional_edges(
-            current.value,
-            lambda state, target=following: _route(state, target, settings),
-            [following, current.value, Stage.ERROR.value],
-        )
+
+    def after_retrieval(state: SessionState) -> str:
+        if state.error:
+            return _route(state, Stage.ANSWER.value, settings)
+        if state.qa_retrieval_attempts and not state.qa_retrieval_feedback:
+            return Stage.VALIDATE.value
+        return Stage.ANSWER.value
+
+    def after_answer(state: SessionState) -> str:
+        if state.error:
+            return _route(state, Stage.VALIDATE.value, settings)
+        if (
+            state.answer and state.answer.status == "insufficient_evidence"
+            and state.qa_retrieval_feedback and not state.qa_retrieval_attempts
+        ):
+            return Stage.REQUERY.value
+        return Stage.VALIDATE.value
+
+    graph.add_conditional_edges(
+        Stage.RETRIEVE.value, after_retrieval,
+        [Stage.ANSWER.value, Stage.VALIDATE.value, Stage.RETRIEVE.value, Stage.ERROR.value],
+    )
+    graph.add_conditional_edges(
+        Stage.ANSWER.value, after_answer,
+        [Stage.REQUERY.value, Stage.VALIDATE.value, Stage.ANSWER.value, Stage.ERROR.value],
+    )
+    graph.add_edge(Stage.REQUERY.value, Stage.RETRIEVE.value)
+    graph.add_conditional_edges(
+        Stage.VALIDATE.value,
+        lambda state: _route(state, END, settings),
+        [END, Stage.VALIDATE.value, Stage.ERROR.value],
+    )
     graph.add_edge(Stage.ERROR.value, END)
     return graph.compile()

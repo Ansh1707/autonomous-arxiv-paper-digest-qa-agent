@@ -467,7 +467,18 @@ class QAService:
             )
         context = self._context_questions(state)
         query = " ".join([*context, state.question]) if context else state.question
-        dense_hits = self.store.query(state.index, query, self.settings.retrieval_candidates)
+        recovering = bool(state.qa_retrieval_attempts and state.qa_retrieval_feedback)
+        if recovering:
+            terms = _terms(query)
+            focused = [
+                word for word in re.findall(r"[a-z0-9]+", query.casefold())
+                if _stem(word) in terms
+            ]
+            search_query = " ".join(focused[:16]) or query
+        else:
+            search_query = query
+        candidate_limit = self.settings.retrieval_candidates * (2 if recovering else 1)
+        dense_hits = self.store.query(state.index, search_query, candidate_limit)
         corpus = self.store.all_chunks(state.index)
         include_references = bool(_REFERENCE.search(state.question))
         terms = _terms(query)
@@ -489,7 +500,9 @@ class QAService:
             ),
             key=lambda item: (-item[0], item[1].page_start, item[1].chunk_id),
         )
-        lexical_hits = [(chunk, 0.0) for score, chunk in lexical[:2] if score > 0]
+        lexical_hits = [
+            (chunk, 0.0) for score, chunk in lexical[:4 if recovering else 2] if score > 0
+        ]
         dropout_phrase = re.search(r"\b(?:residual|attention)\s+dropout\b", query, re.I)
         priority_hits = (
             [
@@ -525,7 +538,7 @@ class QAService:
             key=lambda item: (-item[0], item[1].page_start, item[1].chunk_id),
         )
         exact_phrase_hits = [
-            (chunk, 0.0) for score, chunk in phrase_hits[:2] if score > 0
+            (chunk, 0.0) for score, chunk in phrase_hits[:4 if recovering else 2] if score > 0
         ]
         model_size = re.search(r"\b\d+B\b", query, re.I)
         asks_time = bool(re.search(r"\b(?:time|hours?|duration)\b", query, re.I))
@@ -541,16 +554,21 @@ class QAService:
             )
             and (include_references or not _is_reference(chunk))
         ][:1]
-        # Exactly one candidate pool of at most 12. Put exact terminology
-        # matches first so a small model sees the most literal support early.
+        # Keep the normal pool bounded; only a failed draft doubles its depth.
+        # Put exact terminology matches first so a small model sees literal support.
         merged = [*priority_hits, *size_fact_hits, *exact_phrase_hits, *lexical_hits, *dense_hits]
+        previous_ids = {chunk.chunk_id for chunk in state.retrieved_chunks} if recovering else set()
+        if recovering:
+            novel = [hit for hit in merged if hit[0].chunk_id not in previous_ids]
+            previous = [hit for hit in merged if hit[0].chunk_id in previous_ids]
+            merged = [*novel[:3], *previous, *novel[3:]]
         hits = []
         seen_ids = set()
         for chunk, distance in merged:
             if chunk.chunk_id not in seen_ids:
                 hits.append((chunk, distance))
                 seen_ids.add(chunk.chunk_id)
-            if len(hits) >= self.settings.retrieval_candidates:
+            if len(hits) >= candidate_limit:
                 break
         chosen: list[Chunk] = []
         budget = min(2500, self.settings.context_tokens - 800)
@@ -602,7 +620,15 @@ class QAService:
             ]
             if explicit_absence:
                 chosen = explicit_absence[:1]
-        return {"retrieval_query": query, "retrieved_chunks": chosen}
+        return {
+            "retrieval_query": search_query,
+            "retrieved_chunks": chosen,
+            "qa_retrieval_feedback": (
+                state.qa_retrieval_feedback
+                if recovering and any(chunk.chunk_id not in previous_ids for chunk in chosen)
+                else None
+            ),
+        }
 
     @staticmethod
     def _check_draft(
@@ -764,7 +790,10 @@ class QAService:
                 feedback = str(exc)[:280]
                 if attempt:
                     logger.warning("Qwen QA draft invalid after correction: %s", feedback)
-        return {"answer": _abstain(), "answer_support_quotes": []}
+        return {
+            "answer": _abstain(), "answer_support_quotes": [],
+            "qa_retrieval_feedback": feedback or None,
+        }
 
     @staticmethod
     def _validate(state: SessionState) -> dict:
@@ -808,7 +837,8 @@ class QAService:
             "conversation": [
                 *state.conversation,
                 ConversationTurn(question=state.question, answer=state.answer),
-            ]
+            ],
+            "qa_retrieval_feedback": None,
         }
 
     def run_stage(self, stage: Stage, state: SessionState) -> dict:

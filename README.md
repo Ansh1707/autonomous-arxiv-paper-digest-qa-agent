@@ -57,12 +57,15 @@ flowchart LR
     J --> K[Generate and validate briefing]
     K --> L[Ready session]
     L --> M[Retrieve QA evidence]
-    M --> N[Answer and validate citations]
-    N --> L
-    B & C & D & F & G & H & I & J & K & M & N --> X[Structured error and recovery]
+    M --> N[Generate and check answer draft]
+    N -->|rejected draft; once| R[Refine retrieval]
+    R --> M
+    N --> O[Validate final answer]
+    O --> L
+    B & C & D & F & G & H & I & J & K & M & N & R & O --> X[Structured error and recovery]
 ```
 
-LangGraph passes a typed `SessionState` between nodes. It contains the interpreted intent, candidate metadata, selected paper/version, PDF and parse references, Chroma index fingerprint, evidence, briefing, current question, retrieved chunks, answer/citations, conversation history, retries, and errors. The briefing graph stops at `ready`; each QA turn runs a separate retrieve → answer → validate graph and saves a session snapshot. Reopening checks the saved paper, artifacts, and index before answering again. Empty searches, failed downloads, and unreadable PDFs return explicit recovery errors.
+LangGraph passes a typed `SessionState` between nodes. It contains the interpreted intent, candidate metadata, selected paper/version, PDF and parse references, Chroma index fingerprint, evidence, briefing, current question, retrieved chunks, answer/citations, conversation history, retrieval recovery count, retries, and errors. The briefing graph stops at `ready`; each QA turn runs a separate retrieve → answer → validate graph and saves a session snapshot. If both attempts to repair an invalid answer draft fail, the graph makes one deeper retrieval pass with a focused query and gives newly found passages priority. It validates the final answer or abstains if no new support is found. Reopening checks the saved paper, artifacts, and index before answering again. Empty searches, failed downloads, and unreadable PDFs return explicit recovery errors.
 
 ## Example run: LoRA paper
 
@@ -98,7 +101,7 @@ For an unsupported question such as “What is the first author's favorite food?
 
 I chose one selected paper per session so the briefing and QA citations stay tied to a specific arXiv version. Topic searches use the official arXiv API and rank at most ten candidates with local MiniLM embeddings; direct IDs bypass ranking. The agent uses explicit graph stages rather than one long prompt, making retries, errors, and saved state visible. Chroma persists page-aware chunks, and QA sessions retain the selected paper, index fingerprint, and conversation turns, so a follow-up can reopen without fetching or embedding the paper again.
 
-Qwen2.5:3b runs locally without a paid API key and fits the test machine, but a small model can misread flattened tables or combine nearby facts. The agent therefore checks cited paper/version, copied source text, numbers, requested benchmark or model size, and key actions; when evidence is insufficient or validation fails, it abstains. This favors grounded answers over coverage and can reject an answer that is true but poorly retrieved. PDF downloads and page counts are bounded, and image-only or text-poor PDFs fail clearly because OCR is not implemented.
+Qwen2.5:3b runs locally without a paid API key and fits the test machine, but a small model can misread flattened tables or combine nearby facts. The agent therefore checks cited paper/version, copied source text, numbers, requested benchmark or model size, and key actions. A rejected answer draft can trigger one wider retrieval pass; if it finds no new passage or the second draft still fails, the agent abstains. This favors grounded answers over coverage and can reject an answer that is true but poorly retrieved. PDF downloads and page counts are bounded, and image-only or text-poor PDFs fail clearly because OCR is not implemented.
 
 With more time, I would test on a larger unseen paper set, recover table/equation structure more reliably, add OCR for scanned papers, and compare a stronger local model under the same citation checks. The current tests cover workflow behavior and failure handling, but they do not establish general accuracy across arXiv. There is no frontend, deployment, non-arXiv ingestion, or model fine-tuning because the assessment calls for a focused local agent.
 
