@@ -26,6 +26,8 @@ ignored. No credentials or private keys were found by the staged-file pattern ch
 - `doctor --smoke` passed against local Ollama `qwen2.5:3b`, MiniLM, and Chroma after
   localhost access was allowed.
 - The installed CLI answered an NF4 question with a matching page 1 QLoRA source quote.
+- A `git archive` of the committed file set built a wheel successfully; the archived
+  source passed all 230 tests, and the wheel's installed CLI displayed its commands.
 - Final QA evaluation: 9/9 answerable with checked facts and support quotes; 6/6
   unsupported abstained without citations. This is a tuned regression, while untouched
   first-pass sets scored 6/10 and 8/10; see [Step 17](step17_verification.md).
