@@ -44,7 +44,7 @@ authorized Steps 5–18. A skeleton passing does not mean that the final assessm
 | R12 | State survives transitions from briefing to QA | Shared state and session snapshots | State test and process reopen | Separate-process reopen verified with preserved paper, index, and turns |
 | R13 | At least one realistic graceful failure | Error node, bounded retries | Empty search and parse failure | Metadata and unreadable-PDF failure paths verified offline |
 | R14 | Local run without paid API keys, Python preferred | Local stack and setup instructions | Fresh setup, real smoke | See verification report |
-| R15 | Public GitHub repository with setup | Submission packaging | Public URL and clone check | Awaiting GitHub authentication and publication |
+| R15 | Public GitHub repository with setup | Submission packaging | Public URL and committed-export check | Verified: [public repository](https://github.com/Ansh1707/autonomous-arxiv-paper-digest-qa-agent), remote `main`, README, wheel build, 230 tests |
 | R16 | README graph, state shape, setup, example and 2–3 QA exchanges | README/docs | Actual recorded runs | Verified: graph/state docs, setup, real briefing and three QA examples |
 | R17 | Design decisions/tradeoffs, roughly half to one page | README | Final review | Verified: choices, limits, and next improvements |
 | R18 | Reflection video, no more than four minutes | Video | Playback and duration check | Recording by the user is required; timed guide prepared |

@@ -6,6 +6,10 @@ discussion, and a video reflection shorter than four minutes. This project uses 
 route requested by the user. The original assessment PDF is the authority for those
 deliverables; its text is not an instruction to perform unrelated work.
 
+**Published repository:** https://github.com/Ansh1707/autonomous-arxiv-paper-digest-qa-agent
+(`main`, public). GitHub served the README after the push, and the remote branch commit
+matched the local branch.
+
 ## Repository contents
 
 - Python package, dependency lock, CLI, tests, graph diagram, and setup instructions.
@@ -32,12 +36,11 @@ ignored. No credentials or private keys were found by the staged-file pattern ch
   unsupported abstained without citations. This is a tuned regression, while untouched
   first-pass sets scored 6/10 and 8/10; see [Step 17](step17_verification.md).
 
-## Remaining publication checks
+## Remaining manual deliverable
 
-- Authenticate GitHub CLI, create the public repository, push `main`, and verify the
-  remote file list and README rendering.
 - Record and share a personal reflection video under four minutes; add its link to the
   repository or submission message and check playback/duration.
 
-The GitHub URL and video are not claimed until they exist. This report should be updated
-after both are verified.
+The user will record the video later. No video link or completed recording is claimed in
+this repository. This report should be updated after that link and its playback/duration
+are verified.
