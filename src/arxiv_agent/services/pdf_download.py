@@ -225,7 +225,7 @@ class PdfDownloader:
         )
 
 
-class ArxivPdfServices(ArxivSelectionServices):
+class ArxivPdfServices:
     def __init__(
         self,
         settings: Settings,
@@ -236,7 +236,7 @@ class ArxivPdfServices(ArxivSelectionServices):
         arxiv_client=None,
         downloader: PdfDownloader | None = None,
     ):
-        super().__init__(
+        self.selection = ArxivSelectionServices(
             settings, understanding, selection_rank=selection_rank,
             ranker=ranker, client=arxiv_client,
         )
@@ -250,4 +250,4 @@ class ArxivPdfServices(ArxivSelectionServices):
                     "Select a paper first.",
                 )
             return self.downloader.download(state.selected_paper)
-        return super().run_stage(stage, state)
+        return self.selection.run_stage(stage, state)

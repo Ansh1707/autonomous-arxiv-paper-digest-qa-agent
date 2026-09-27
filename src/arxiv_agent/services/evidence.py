@@ -403,7 +403,7 @@ class EvidenceExtractor:
         return output.resolve(), bundle
 
 
-class ArxivEvidenceServices(ArxivIndexServices):
+class ArxivEvidenceServices:
     def __init__(
         self,
         settings: Settings,
@@ -413,7 +413,10 @@ class ArxivEvidenceServices(ArxivIndexServices):
         extractor: EvidenceExtractor | None = None,
         **kwargs,
     ):
-        super().__init__(settings, understanding, selection_rank=selection_rank, **kwargs)
+        self.indexing = ArxivIndexServices(
+            settings, understanding, selection_rank=selection_rank, **kwargs
+        )
+        self.store = self.indexing.store
         self.extractor = extractor or EvidenceExtractor(settings, self.store)
 
     def run_stage(self, stage: Stage, state: SessionState) -> dict:
@@ -425,4 +428,4 @@ class ArxivEvidenceServices(ArxivIndexServices):
                 "limitations_evidence_status": bundle.limitations_status,
                 "warnings": [*state.warnings, *bundle.warnings],
             }
-        return super().run_stage(stage, state)
+        return self.indexing.run_stage(stage, state)

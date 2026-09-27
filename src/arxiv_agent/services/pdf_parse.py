@@ -414,7 +414,7 @@ class PdfParser:
         )
 
 
-class ArxivParseServices(ArxivPdfServices):
+class ArxivParseServices:
     def __init__(
         self,
         settings: Settings,
@@ -426,7 +426,7 @@ class ArxivParseServices(ArxivPdfServices):
         downloader: PdfDownloader | None = None,
         parser: PdfParser | None = None,
     ):
-        super().__init__(
+        self.download = ArxivPdfServices(
             settings, understanding, selection_rank=selection_rank,
             ranker=ranker, arxiv_client=arxiv_client, downloader=downloader,
         )
@@ -446,4 +446,4 @@ class ArxivParseServices(ArxivPdfServices):
                 "parsed_pages_with_text": parsed.pages_with_text,
                 "warnings": [*state.warnings, *parsed.warnings],
             }
-        return super().run_stage(stage, state)
+        return self.download.run_stage(stage, state)

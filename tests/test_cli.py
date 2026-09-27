@@ -18,10 +18,11 @@ def test_demo_failure_returns_nonzero(capsys):
     assert "UNREADABLE_PDF" in capsys.readouterr().out
 
 
-@pytest.mark.parametrize("args", [["digest", "2106.09685"]])
-def test_real_commands_are_not_silently_stubbed(capsys, args):
-    assert main(args) == 2
-    assert "not implemented" in capsys.readouterr().err
+def test_cli_lists_only_available_paper_commands():
+    help_text = parser().format_help()
+    assert "brief-paper" in help_text
+    assert "ask-paper" in help_text
+    assert "digest" not in help_text
 
 
 def test_chat_rejects_invalid_session_id(capsys):
@@ -102,9 +103,14 @@ def test_graph_prints_actual_compiled_graphs(capsys):
     assert "PDF parsing (live Steps 5–9)" in output
 
 
-@pytest.mark.parametrize("rank", ["0", "-1", "11", "abc"])
+@pytest.mark.parametrize("rank", ["0", "-1", "abc"])
 @pytest.mark.parametrize("command", ["select-paper", "fetch-paper", "parse-paper"])
 def test_selection_rejects_impossible_rank_before_network(rank, command):
     with pytest.raises(SystemExit) as exc:
         parser().parse_args([command, "graph networks", "--select", rank])
     assert exc.value.code == 2
+
+
+def test_selection_accepts_rank_beyond_old_ten_candidate_limit():
+    args = parser().parse_args(["select-paper", "quantized language models", "--select", "45"])
+    assert args.select == 45

@@ -64,9 +64,9 @@ def _selection_rank(value: str) -> int:
     try:
         rank = int(value)
     except ValueError as exc:
-        raise argparse.ArgumentTypeError("RANK must be an integer from 1 to 10") from exc
-    if not 1 <= rank <= 10:
-        raise argparse.ArgumentTypeError("RANK must be an integer from 1 to 10")
+        raise argparse.ArgumentTypeError("RANK must be a positive integer") from exc
+    if rank < 1:
+        raise argparse.ArgumentTypeError("RANK must be a positive integer")
     return rank
 
 
@@ -154,10 +154,6 @@ def parser() -> argparse.ArgumentParser:
         "--follow-up", action="append", default=[], metavar="QUESTION",
         help="Ask another question in the same saved session; repeat as needed",
     )
-    digest = sub.add_parser("digest", help="Reserved for later steps; currently unavailable")
-    digest.add_argument("input")
-    digest.add_argument("--select", type=int, default=1)
-    digest.add_argument("--no-chat", action="store_true")
     chat = sub.add_parser("chat", help="Reopen a saved QA session and ask more questions")
     chat.add_argument("--session", required=True)
     chat.add_argument("question", nargs="?", help="Question; omit for an interactive chat")
@@ -175,13 +171,6 @@ def main(argv: list[str] | None = None) -> int:
     logging.basicConfig(
         level=settings.log_level, format="%(asctime)s %(levelname)s %(name)s %(message)s"
     )
-    if args.command == "digest":
-        print(
-            f"{args.command} is not implemented yet. "
-            "Use 'brief-paper' for a briefing or 'ask-paper' for grounded QA.",
-            file=sys.stderr,
-        )
-        return 2
     if args.command == "doctor":
         from arxiv_agent.diagnostics import run_doctor
 
@@ -427,90 +416,26 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 2 if state.status == "failed" else 0
     if args.command == "graph":
-        from arxiv_agent.services.briefing import ArxivBriefingServices
-        from arxiv_agent.services.discovery import ArxivDiscoveryServices
-        from arxiv_agent.services.evidence import ArxivEvidenceServices
-        from arxiv_agent.services.indexing import ArxivIndexServices
-        from arxiv_agent.services.input_understanding import (
-            InputUnderstandingServices,
-            OllamaTopicInterpreter,
-        )
-        from arxiv_agent.services.pdf_download import ArxivPdfServices
-        from arxiv_agent.services.pdf_parse import ArxivParseServices
-        from arxiv_agent.services.selection import ArxivSelectionServices
-
+        # Diagrams depend on routing, so they do not need live service construction.
         services = SyntheticServices("lookup")
         graphs = [
-            (
-                "Input understanding (live Step 5)",
-                build_understanding_graph(
-                    InputUnderstandingServices(OllamaTopicInterpreter(settings)), settings
-                ),
-            ),
-            (
-                "Metadata discovery (live Steps 5–6)",
-                build_discovery_graph(
-                    ArxivDiscoveryServices(
-                        settings, InputUnderstandingServices(OllamaTopicInterpreter(settings))
-                    ),
-                    settings,
-                ),
-            ),
-            (
-                "Paper selection (live Steps 5–7)",
-                build_selection_graph(
-                    ArxivSelectionServices(
-                        settings, InputUnderstandingServices(OllamaTopicInterpreter(settings))
-                    ),
-                    settings,
-                ),
-            ),
-            (
-                "PDF acquisition (live Steps 5–8)",
-                build_download_graph(
-                    ArxivPdfServices(
-                        settings, InputUnderstandingServices(OllamaTopicInterpreter(settings))
-                    ),
-                    settings,
-                ),
-            ),
-            (
-                "PDF parsing (live Steps 5–9)",
-                build_parse_graph(
-                    ArxivParseServices(
-                        settings, InputUnderstandingServices(OllamaTopicInterpreter(settings))
-                    ),
-                    settings,
-                ),
-            ),
-            (
-                "Vector indexing (live Steps 5–10)",
-                build_index_graph(
-                    ArxivIndexServices(
-                        settings, InputUnderstandingServices(OllamaTopicInterpreter(settings))
-                    ),
-                    settings,
-                ),
-            ),
-            (
-                "Evidence extraction (live Steps 5–11)",
-                build_evidence_graph(
-                    ArxivEvidenceServices(
-                        settings, InputUnderstandingServices(OllamaTopicInterpreter(settings))
-                    ),
-                    settings,
-                ),
-            ),
-            (
-                "Executive briefing (live Steps 5–12)",
-                build_briefing_graph(
-                    ArxivBriefingServices(
-                        settings, InputUnderstandingServices(OllamaTopicInterpreter(settings))
-                    ),
-                    settings,
-                ),
-            ),
-            ("Digest skeleton", build_digest_graph(services, settings)),
+            ("Input understanding (live Step 5)",
+             build_understanding_graph(services, settings)),
+            ("Metadata discovery (live Steps 5–6)",
+             build_discovery_graph(services, settings)),
+            ("Paper selection (live Steps 5–7)",
+             build_selection_graph(services, settings)),
+            ("PDF acquisition (live Steps 5–8)",
+             build_download_graph(services, settings)),
+            ("PDF parsing (live Steps 5–9)",
+             build_parse_graph(services, settings)),
+            ("Vector indexing (live Steps 5–10)",
+             build_index_graph(services, settings)),
+            ("Evidence extraction (live Steps 5–11)",
+             build_evidence_graph(services, settings)),
+            ("Executive briefing (live Steps 5–12)",
+             build_briefing_graph(services, settings)),
+            ("Complete ingestion graph", build_digest_graph(services, settings)),
             ("QA turn graph (live Step 15; synthetic provider in diagram)",
              build_qa_graph(services, settings)),
         ]

@@ -720,7 +720,7 @@ class BriefingBuilder:
         return briefing, [str(json_path), str(markdown_path)]
 
 
-class ArxivBriefingServices(ArxivEvidenceServices):
+class ArxivBriefingServices:
     def __init__(
         self,
         settings: Settings,
@@ -730,11 +730,13 @@ class ArxivBriefingServices(ArxivEvidenceServices):
         builder: BriefingBuilder | None = None,
         **kwargs,
     ):
-        super().__init__(settings, understanding, selection_rank=selection_rank, **kwargs)
+        self.evidence = ArxivEvidenceServices(
+            settings, understanding, selection_rank=selection_rank, **kwargs
+        )
         self.builder = builder or BriefingBuilder(settings)
 
     def run_stage(self, stage: Stage, state: SessionState) -> dict:
         if stage == Stage.BRIEF:
             briefing, paths = self.builder.build(state)
             return {"briefing": briefing, "output_paths": paths}
-        return super().run_stage(stage, state)
+        return self.evidence.run_stage(stage, state)

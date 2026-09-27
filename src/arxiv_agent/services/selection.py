@@ -113,7 +113,7 @@ class EmbeddingRanker:
         return [candidate for _, candidate in ranked]
 
 
-class ArxivSelectionServices(ArxivDiscoveryServices):
+class ArxivSelectionServices:
     def __init__(
         self,
         settings: Settings,
@@ -123,7 +123,7 @@ class ArxivSelectionServices(ArxivDiscoveryServices):
         ranker: EmbeddingRanker | None = None,
         client: arxiv.Client | None = None,
     ):
-        super().__init__(settings, understanding, client)
+        self.discovery = ArxivDiscoveryServices(settings, understanding, client)
         self.selection_rank = selection_rank
         self.ranker = ranker or EmbeddingRanker(LocalMiniLMEncoder(settings))
 
@@ -148,7 +148,7 @@ class ArxivSelectionServices(ArxivDiscoveryServices):
                 "INVALID_SELECTION", "An arXiv ID resolves to one paper, so only rank 1 is valid.",
                 "Omit --select or use --select 1.",
             )
-        patch = super().run_stage(stage, state)
+        patch = self.discovery.run_stage(stage, state)
         if stage == Stage.LOOKUP:
             patch.update(selection_rank=1, selection_source="lookup")
         return patch

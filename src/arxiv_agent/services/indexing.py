@@ -336,19 +336,21 @@ class ChromaIndexStore:
             ) from exc
 
 
-class ArxivIndexServices(ArxivParseServices):
+class ArxivIndexServices:
     def __init__(
         self, settings: Settings, understanding: InputUnderstandingServices, *,
         selection_rank: int = 1, chunker: TokenAwareChunker | None = None,
         store: ChromaIndexStore | None = None, **kwargs,
     ):
-        super().__init__(settings, understanding, selection_rank=selection_rank, **kwargs)
+        self.parsing = ArxivParseServices(
+            settings, understanding, selection_rank=selection_rank, **kwargs
+        )
         self.chunker = chunker or TokenAwareChunker(settings)
         self.store = store or ChromaIndexStore(settings)
 
     def run_stage(self, stage: Stage, state: SessionState) -> dict:
         if stage != Stage.INDEX:
-            return super().run_stage(stage, state)
+            return self.parsing.run_stage(stage, state)
         if not state.parsed_path or not state.selected_paper or not state.pdf_checksum:
             raise StageFailure(
                 "MISSING_PARSED_PAPER", "Indexing requires a parsed paper and PDF checksum.",

@@ -145,248 +145,112 @@ def _route(state: SessionState, next_stage: str, settings: Settings) -> str:
     return next_stage
 
 
-def build_digest_graph(services: WorkflowServices, settings: Settings):
-    """Build the ingestion/briefing skeleton. No service makes real calls implicitly."""
-    graph = StateGraph(SessionState)
-    stages = [
-        Stage.UNDERSTAND,
-        Stage.LOOKUP,
-        Stage.SEARCH,
-        Stage.BROADEN,
-        Stage.RANK,
-        Stage.DOWNLOAD,
-        Stage.PARSE,
-        Stage.INDEX,
-        Stage.EVIDENCE,
-        Stage.BRIEF,
-        Stage.READY,
-    ]
-    for stage in stages:
-        graph.add_node(stage.value, _node(stage, services, settings))
-    graph.add_node(Stage.ERROR.value, _handle_error)
-    graph.add_edge(START, Stage.UNDERSTAND.value)
-
-    def route_intent(state: SessionState) -> str:
-        next_stage = (
-            Stage.LOOKUP if state.intent and state.intent.kind == "lookup" else Stage.SEARCH
-        )
-        return _route(state, next_stage.value, settings)
-
-    def route_search(state: SessionState) -> str:
-        if state.error:
-            return _route(state, Stage.RANK.value, settings)
-        if state.candidates:
-            return Stage.RANK.value
-        return Stage.ERROR.value if state.search_broadened else Stage.BROADEN.value
-
-    graph.add_conditional_edges(
-        Stage.UNDERSTAND.value,
-        route_intent,
-        [
-            Stage.LOOKUP.value,
-            Stage.SEARCH.value,
-            Stage.UNDERSTAND.value,
-            Stage.ERROR.value,
-        ],
-    )
-    graph.add_conditional_edges(
-        Stage.SEARCH.value,
-        route_search,
-        [
-            Stage.RANK.value,
-            Stage.BROADEN.value,
-            Stage.SEARCH.value,
-            Stage.ERROR.value,
-        ],
-    )
-    transitions = {
-        Stage.LOOKUP: Stage.DOWNLOAD,
-        Stage.BROADEN: Stage.SEARCH,
-        Stage.RANK: Stage.DOWNLOAD,
-        Stage.DOWNLOAD: Stage.PARSE,
-        Stage.PARSE: Stage.INDEX,
-        Stage.INDEX: Stage.EVIDENCE,
-        Stage.EVIDENCE: Stage.BRIEF,
-        Stage.BRIEF: Stage.READY,
-    }
-    for current, following in transitions.items():
-        graph.add_conditional_edges(
-            current.value,
-            lambda state, target=following.value: _route(state, target, settings),
-            [following.value, current.value, Stage.ERROR.value],
-        )
-    graph.add_conditional_edges(
-        Stage.READY.value,
-        lambda state: _route(state, END, settings),
-        [END, Stage.READY.value, Stage.ERROR.value],
-    )
-    graph.add_edge(Stage.ERROR.value, END)
-    return graph.compile()
+_INGESTION_ORDER = (
+    Stage.UNDERSTAND, Stage.SEARCH, Stage.RANK, Stage.DOWNLOAD, Stage.PARSE,
+    Stage.INDEX, Stage.EVIDENCE, Stage.BRIEF, Stage.READY,
+)
 
 
-def build_understanding_graph(services: WorkflowServices, settings: Settings):
-    """Run only Step 5 without implying later retrieval stages are implemented."""
+def _build_ingestion_graph(
+    services: WorkflowServices, settings: Settings, stop_after: Stage
+):
+    """Use one routing definition for the full workflow and every CLI checkpoint."""
+    if stop_after not in _INGESTION_ORDER:
+        raise ValueError(f"Unsupported ingestion stop stage: {stop_after}")
+    enabled = _INGESTION_ORDER[:_INGESTION_ORDER.index(stop_after) + 1]
     graph = StateGraph(SessionState)
     graph.add_node(Stage.UNDERSTAND.value, _node(Stage.UNDERSTAND, services, settings))
+    if stop_after != Stage.UNDERSTAND:
+        for stage in (Stage.LOOKUP, Stage.SEARCH, Stage.BROADEN, *enabled[2:]):
+            graph.add_node(stage.value, _node(stage, services, settings))
     graph.add_node(Stage.ERROR.value, _handle_error)
     graph.add_edge(START, Stage.UNDERSTAND.value)
-    graph.add_conditional_edges(
-        Stage.UNDERSTAND.value,
-        lambda state: _route(state, END, settings),
-        [END, Stage.UNDERSTAND.value, Stage.ERROR.value],
-    )
     graph.add_edge(Stage.ERROR.value, END)
-    return graph.compile()
 
+    def connect(current: Stage, following: Stage | None) -> None:
+        target = following.value if following else END
+        graph.add_conditional_edges(
+            current.value,
+            lambda state, next_node=target: _route(state, next_node, settings),
+            [target, current.value, Stage.ERROR.value],
+        )
 
-def _build_metadata_graph(
-    services: WorkflowServices,
-    settings: Settings,
-    *,
-    select: bool,
-    download: bool = False,
-    parse: bool = False,
-    index: bool = False,
-    evidence: bool = False,
-    brief: bool = False,
-):
-    graph = StateGraph(SessionState)
-    for stage in (Stage.UNDERSTAND, Stage.LOOKUP, Stage.SEARCH, Stage.BROADEN):
-        graph.add_node(stage.value, _node(stage, services, settings))
-    if select:
-        graph.add_node(Stage.RANK.value, _node(Stage.RANK, services, settings))
-    if download:
-        graph.add_node(Stage.DOWNLOAD.value, _node(Stage.DOWNLOAD, services, settings))
-    if parse:
-        graph.add_node(Stage.PARSE.value, _node(Stage.PARSE, services, settings))
-    if index:
-        graph.add_node(Stage.INDEX.value, _node(Stage.INDEX, services, settings))
-    if evidence:
-        graph.add_node(Stage.EVIDENCE.value, _node(Stage.EVIDENCE, services, settings))
-    if brief:
-        graph.add_node(Stage.BRIEF.value, _node(Stage.BRIEF, services, settings))
-    graph.add_node(Stage.ERROR.value, _handle_error)
-    graph.add_edge(START, Stage.UNDERSTAND.value)
+    if stop_after == Stage.UNDERSTAND:
+        connect(Stage.UNDERSTAND, None)
+        return graph.compile()
+
     graph.add_conditional_edges(
         Stage.UNDERSTAND.value,
         lambda state: _route(
             state,
-            (
-                Stage.LOOKUP if state.intent and state.intent.kind == "lookup" else Stage.SEARCH
-            ).value,
+            (Stage.LOOKUP if state.intent and state.intent.kind == "lookup" else Stage.SEARCH)
+            .value,
             settings,
         ),
         [Stage.LOOKUP.value, Stage.SEARCH.value, Stage.UNDERSTAND.value, Stage.ERROR.value],
     )
-    graph.add_conditional_edges(
-        Stage.LOOKUP.value,
-        lambda state: _route(state, Stage.DOWNLOAD.value if download else END, settings),
-        [Stage.DOWNLOAD.value if download else END, Stage.LOOKUP.value, Stage.ERROR.value],
-    )
+    after_selection = Stage.DOWNLOAD if Stage.DOWNLOAD in enabled else None
+    connect(Stage.LOOKUP, after_selection)
+    connect(Stage.BROADEN, Stage.SEARCH)
 
     def after_search(state: SessionState) -> str:
         if state.error:
             return _route(state, END, settings)
         if state.candidates:
-            return Stage.RANK.value if select else END
+            return Stage.RANK.value if Stage.RANK in enabled else END
         return Stage.ERROR.value if state.search_broadened else Stage.BROADEN.value
 
     graph.add_conditional_edges(
         Stage.SEARCH.value,
         after_search,
         [
-            Stage.RANK.value if select else END,
-            Stage.BROADEN.value,
-            Stage.SEARCH.value,
-            Stage.ERROR.value,
+            Stage.RANK.value if Stage.RANK in enabled else END,
+            Stage.BROADEN.value, Stage.SEARCH.value, Stage.ERROR.value,
         ],
     )
-    graph.add_conditional_edges(
-        Stage.BROADEN.value,
-        lambda state: _route(state, Stage.SEARCH.value, settings),
-        [Stage.SEARCH.value, Stage.BROADEN.value, Stage.ERROR.value],
-    )
-    graph.add_edge(Stage.ERROR.value, END)
-    if select:
-        graph.add_conditional_edges(
-            Stage.RANK.value,
-            lambda state: _route(state, Stage.DOWNLOAD.value if download else END, settings),
-            [Stage.DOWNLOAD.value if download else END, Stage.RANK.value, Stage.ERROR.value],
-        )
-    if download:
-        graph.add_conditional_edges(
-            Stage.DOWNLOAD.value,
-            lambda state: _route(state, Stage.PARSE.value if parse else END, settings),
-            [Stage.PARSE.value if parse else END, Stage.DOWNLOAD.value, Stage.ERROR.value],
-        )
-    if parse:
-        graph.add_conditional_edges(
-            Stage.PARSE.value,
-            lambda state: _route(state, Stage.INDEX.value if index else END, settings),
-            [Stage.INDEX.value if index else END, Stage.PARSE.value, Stage.ERROR.value],
-        )
-    if index:
-        graph.add_conditional_edges(
-            Stage.INDEX.value,
-            lambda state: _route(state, Stage.EVIDENCE.value if evidence else END, settings),
-            [Stage.EVIDENCE.value if evidence else END, Stage.INDEX.value, Stage.ERROR.value],
-        )
-    if evidence:
-        graph.add_conditional_edges(
-            Stage.EVIDENCE.value,
-            lambda state: _route(state, Stage.BRIEF.value if brief else END, settings),
-            [Stage.BRIEF.value if brief else END, Stage.EVIDENCE.value, Stage.ERROR.value],
-        )
-    if brief:
-        graph.add_conditional_edges(
-            Stage.BRIEF.value,
-            lambda state: _route(state, END, settings),
-            [END, Stage.BRIEF.value, Stage.ERROR.value],
-        )
+    if Stage.RANK in enabled:
+        connect(Stage.RANK, after_selection)
+    linear = enabled[3:]
+    for index, stage in enumerate(linear):
+        connect(stage, linear[index + 1] if index + 1 < len(linear) else None)
     return graph.compile()
 
 
+def build_digest_graph(services: WorkflowServices, settings: Settings):
+    """Build the complete ingestion/briefing graph for synthetic demonstrations."""
+    return _build_ingestion_graph(services, settings, Stage.READY)
+
+
+def build_understanding_graph(services: WorkflowServices, settings: Settings):
+    return _build_ingestion_graph(services, settings, Stage.UNDERSTAND)
+
+
 def build_discovery_graph(services: WorkflowServices, settings: Settings):
-    """Run Steps 5–6 and stop before ranking."""
-    return _build_metadata_graph(services, settings, select=False)
+    return _build_ingestion_graph(services, settings, Stage.SEARCH)
 
 
 def build_selection_graph(services: WorkflowServices, settings: Settings):
-    """Run Steps 5–7 and stop after choosing a versioned paper."""
-    return _build_metadata_graph(services, settings, select=True)
+    return _build_ingestion_graph(services, settings, Stage.RANK)
 
 
 def build_download_graph(services: WorkflowServices, settings: Settings):
-    """Run Steps 5–8 and stop after a validated versioned PDF is cached."""
-    return _build_metadata_graph(services, settings, select=True, download=True)
+    return _build_ingestion_graph(services, settings, Stage.DOWNLOAD)
 
 
 def build_parse_graph(services: WorkflowServices, settings: Settings):
-    """Run Steps 5–9 and stop after page-aware PDF text extraction."""
-    return _build_metadata_graph(services, settings, select=True, download=True, parse=True)
+    return _build_ingestion_graph(services, settings, Stage.PARSE)
 
 
 def build_index_graph(services: WorkflowServices, settings: Settings):
-    """Run Steps 5–10 and stop after persistent provenance-aware vector indexing."""
-    return _build_metadata_graph(
-        services, settings, select=True, download=True, parse=True, index=True
-    )
+    return _build_ingestion_graph(services, settings, Stage.INDEX)
 
 
 def build_evidence_graph(services: WorkflowServices, settings: Settings):
-    """Run Steps 5–11 and stop after source-linked evidence extraction."""
-    return _build_metadata_graph(
-        services, settings, select=True, download=True, parse=True, index=True,
-        evidence=True,
-    )
+    return _build_ingestion_graph(services, settings, Stage.EVIDENCE)
 
 
 def build_briefing_graph(services: WorkflowServices, settings: Settings):
-    """Run Steps 5–12 and stop after a source-validated executive briefing."""
-    return _build_metadata_graph(
-        services, settings, select=True, download=True, parse=True, index=True,
-        evidence=True, brief=True,
-    )
+    return _build_ingestion_graph(services, settings, Stage.BRIEF)
 
 
 def build_qa_graph(services: WorkflowServices, settings: Settings):
