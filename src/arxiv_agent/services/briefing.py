@@ -22,10 +22,11 @@ from arxiv_agent.contracts import (
 )
 from arxiv_agent.services.base import StageFailure
 from arxiv_agent.services.evidence import EVIDENCE_VERSION, ArxivEvidenceServices
+from arxiv_agent.services.grounding import supported_sentence
 from arxiv_agent.settings import Settings
 
 logger = logging.getLogger(__name__)
-BRIEFING_VERSION = 3
+BRIEFING_VERSION = 6
 _NUMBERS = re.compile(r"(?<!\d)\d[\d,]*(?:\.\d+)?")
 
 
@@ -186,6 +187,10 @@ class OllamaBriefingGenerator:
             return value[:700]
 
         def claim(instruction: str, note: EvidenceNote) -> DraftClaim:
+            if note.facet == "limitation":
+                sentence = _direct_limitation_sentence(note.text)
+                if sentence:
+                    return DraftClaim(text=sentence, chunk_id=note.chunk_id, source_quote=sentence)
             if note.facet == "result":
                 sentence = _direct_result_sentence(note.text)
                 if sentence:
@@ -203,7 +208,17 @@ class OllamaBriefingGenerator:
                 if sentence:
                     return DraftClaim(text=sentence, chunk_id=note.chunk_id, source_quote=note.text)
             text = ask(instruction, source_for_prompt(note), ShortText).text
-            return DraftClaim(text=text, chunk_id=note.chunk_id, source_quote=note.text)
+            support = supported_sentence(text, note.text)
+            if support is None:
+                text = _extractive_fallback(note)
+                if text is None:
+                    raise ValueError(
+                        f"No sentence directly supports the generated {note.facet} claim"
+                    )
+                support = supported_sentence(text, note.text)
+                if support is None:
+                    raise ValueError(f"Extracted {note.facet} claim lost its source sentence")
+            return DraftClaim(text=text, chunk_id=note.chunk_id, source_quote=support)
 
         try:
             problem_note = grouped["problem"][0]
@@ -216,14 +231,32 @@ class OllamaBriefingGenerator:
                 "State the concrete research problem in one sentence of at most 35 words.",
                 problem_note,
             )
+            method_notes = [
+                note for note in grouped["method"]
+                if _direct_method_sentence(note.text) or _extractive_fallback(note)
+            ]
             methods = [
                 claim(
                     "State one concrete step of the proposed method in one complete sentence "
                     "of at most 35 words. Do not confuse the update with the original weights.",
                     note,
                 )
-                for note in grouped["method"][:2]
+                for note in method_notes[:2]
             ]
+            result_notes = [
+                note for note in grouped["result"]
+                if _direct_result_sentence(note.text) or _extractive_fallback(note)
+            ]
+            short_name = evidence.paper.title.split(":", 1)[0].strip()
+            if ":" in evidence.paper.title and len(short_name) <= 12:
+                focused = [
+                    note for note in result_notes
+                    if short_name.casefold() in (
+                        _direct_result_sentence(note.text) or _extractive_fallback(note) or ""
+                    ).casefold()
+                ]
+                if focused:
+                    result_notes = focused
             results = [
                 claim(
                     "State one reported result or comparison in at most 35 words. "
@@ -231,7 +264,7 @@ class OllamaBriefingGenerator:
                     "do not pair individual row numbers with benchmarks.",
                     note,
                 )
-                for note in grouped["result"][:2]
+                for note in result_notes[:2]
             ]
             limitations = [
                 claim(
@@ -347,6 +380,71 @@ def _direct_method_sentence(value: str) -> str | None:
     )
 
 
+def _direct_limitation_sentence(value: str) -> str | None:
+    sentences = re.split(r"(?<!\d)(?<=[.!?])\s+(?!\d)", " ".join(value.split()))
+    return next(
+        (
+            sentence
+            for sentence in sentences
+            if sentence.endswith(".")
+            and 25 <= len(sentence) <= 260
+            and re.search(
+                r"\b(?:not straightforward|cannot|can't|difficult|"
+                r"limitations? (?:include|is|are)|we (?:do not|did not) evaluate)\b",
+                sentence,
+                re.I,
+            )
+            and not re.search(r"\bdo not need\b", sentence, re.I)
+        ),
+        None,
+    )
+
+
+def _extractive_fallback(note: EvidenceNote) -> str | None:
+    """Use a literal source finding when a model paraphrase cannot be established."""
+    signals = {
+        "problem": (
+            r"\b(?:drawback|challeng\w*|difficult|expens\w*|reduc\w*.{0,12}need|"
+            r"in order to understand|without explicit reward modeling|insufficient)"
+        ),
+        "method": (
+            r"\b(?:we (?:propose|introduce|use|train)|our model|our major contribution|"
+            r"during training|pre-trained model parameters|during fine-tuning|"
+            r"bypass both fitting|projection head|data augmentation module|"
+            r"decompose multi-step problems into intermediate steps)"
+        ),
+        "result": r"\b(?:we (?:find|observe)|outperform\w*|improv\w*|achiev\w*)",
+        "limitation": (
+            r"\b(?:limitation|not straightforward|cannot|can't|difficult|"
+            r"we (?:do not|did not) evaluate)\b"
+        ),
+    }
+    sentences = re.split(
+        r"(?<!\d)(?<=[.!?])\s+(?!\d)|(?<=\.)\s+(?=\d+(?:\.\d+)*\s+[A-Z])",
+        " ".join(note.text.split()),
+    )
+    for sentence in sentences:
+        sentence = sentence.strip()
+        if note.facet == "problem" and "One of the main drawbacks" in sentence:
+            sentence = sentence[sentence.index("One of the main drawbacks") :]
+        if note.facet == "result" and not re.match(r"^[A-Z]", sentence):
+            continue  # A chunk may begin in the middle of a reported result.
+        if not re.search(signals[note.facet], sentence, re.I) or re.search(
+            r"\b(?:if|might|could|would)\b", sentence, re.I
+        ):
+            continue
+        if sentence.endswith((".", "!", "?")) and 25 <= len(sentence) <= 260:
+            return sentence
+        if sentence.endswith(":") and 25 <= len(sentence) <= 260:
+            return sentence[:-1] + "."
+        first_clause = sentence.split(",", 1)[0]
+        if 25 <= len(first_clause) <= 250 and re.search(
+            signals[note.facet], first_clause, re.I
+        ):
+            return first_clause.rstrip(" ,;:") + "."
+    return None
+
+
 class BriefingBuilder:
     def __init__(self, settings: Settings, generator: BriefingGenerator | None = None):
         self.settings = settings
@@ -379,10 +477,22 @@ class BriefingBuilder:
         if (
             field == "key_results"
             and _numbers(claim.text)
-            and len(_numbers(note.text)) > 5
-            and re.search(r"\bTable\s+\d+\s*:", note.text, re.I)
+            and len(_numbers(claim.source_quote)) > 5
+            and re.search(r"\bTable\s+\d+\s*:", claim.source_quote, re.I)
         ):
             raise ValueError(f"{field} includes ambiguous numbers from a parsed table")
+        if supported_sentence(claim.text, claim.source_quote) is None:
+            raise ValueError(f"{field} claim is not established by one cited source sentence")
+        if field == "limitations" and (
+            not re.search(
+                r"\b(?:not straightforward|cannot|can't|difficult|"
+                r"limitations? (?:include|is|are)|we (?:do not|did not) evaluate)\b",
+                claim.source_quote,
+                re.I,
+            )
+            or re.search(r"\bdo not need\b", claim.source_quote, re.I)
+        ):
+            raise ValueError("Limitation claim does not cite an explicit drawback")
         return EvidenceClaim(text=claim.text, chunk_ids=[claim.chunk_id]), QuoteAudit(
             field=field,
             chunk_id=claim.chunk_id,

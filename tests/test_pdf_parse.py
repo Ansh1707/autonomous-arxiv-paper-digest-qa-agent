@@ -8,7 +8,7 @@ import pymupdf
 from arxiv_agent.contracts import PaperMetadata, ParsedPaper, SessionState, Stage
 from arxiv_agent.graph import build_parse_graph
 from arxiv_agent.services.input_understanding import InputUnderstandingServices, TopicExtraction
-from arxiv_agent.services.pdf_parse import ArxivParseServices, PdfParser, _ordered_blocks
+from arxiv_agent.services.pdf_parse import ArxivParseServices, PdfParser, _heading, _ordered_blocks
 
 
 def fixture_pdf(path: Path, *, abstract=True, references=True):
@@ -77,6 +77,13 @@ def test_extracts_abstract_sections_references_and_page_provenance(settings):
     assert {block.page for block in parsed.blocks} == {1, 2}
     assert all(block.block_id and len(block.bbox) == 4 for block in parsed.blocks)
     assert ParsedPaper.model_validate_json(output.read_text()) == parsed
+
+
+def test_numbered_headings_with_trailing_period_are_recognized():
+    assert _heading("2. Method", 72, 595) == "Method"
+    assert _heading("2.1. The Contrastive Learning Framework", 72, 595) == (
+        "The Contrastive Learning Framework"
+    )
 
 
 def test_missing_pdf_abstract_uses_metadata_with_warning(settings):

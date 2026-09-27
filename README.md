@@ -75,15 +75,15 @@ Excerpt from the generated briefing (bibliographic fields and claim wording reta
 
 > **LoRA: Low-Rank Adaptation of Large Language Models** — Edward J. Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang, Weizhu Chen. [arXiv:2106.09685v1](https://arxiv.org/abs/2106.09685v1), published 2021-06-17.
 >
-> **Why this paper matters:** Paper highlights the inefficiency of fine-tuning as it requires learning unique parameters for each task, wasting computational resources. [PDF p. 2](https://arxiv.org/pdf/2106.09685v1#page=2)
+> **Why this paper matters:** One of the main drawbacks for full fine-tuning is that for each downstream task, we learn a different set of parameters ∆Φ whose dimensions |∆Φ| equals |Φ0|. [PDF p. 2](https://arxiv.org/pdf/2106.09685v1#page=2)
 >
-> **Problem:** Concrete research problem: How can we reduce the parameter learning complexity in fine-tuning large language models for multiple tasks. [PDF p. 2](https://arxiv.org/pdf/2106.09685v1#page=2)
+> **Problem:** One of the main drawbacks for full fine-tuning is that for each downstream task, we learn a different set of parameters ∆Φ whose dimensions |∆Φ| equals |Φ0|. [PDF p. 2](https://arxiv.org/pdf/2106.09685v1#page=2)
 >
-> **Method:** LoRA updates low-rank matrices in dense layers, simplifying adaptation without altering original weights. It applies to any model but focuses on Transformers for practical experiments. During training, W0 is frozen and does not receive gradient updates, while A and B contain trainable parameters. [PDF p. 3](https://arxiv.org/pdf/2106.09685v1#page=3)
+> **Method:** During training, W0 is frozen and does not receive gradient updates, while A and B contain trainable parameters. [PDF p. 3](https://arxiv.org/pdf/2106.09685v1#page=3)
 >
 > **Key result:** LoRA outperforms several baselines with comparable or fewer trainable parameters. [PDF p. 7](https://arxiv.org/pdf/2106.09685v1#page=7)
 >
-> **Limitation:** LoRA has its limitations, such as difficulty in batching inputs for different tasks with separate A and B matrices in a single forward pass due to integrating them into a larger weight matrix W to maintain inference efficiency. [PDF p. 4](https://arxiv.org/pdf/2106.09685v1#page=4)
+> **Limitation:** For example, it is not straightforward to batch inputs to different tasks with different A and B in a single forward pass, because we absorb A and B into W to prevent additional inference latency. [PDF p. 4](https://arxiv.org/pdf/2106.09685v1#page=4)
 >
 > **Suggested follow-ups:** What is the main drawback of full fine-tuning according to the passage? How does LoRA differ from other methods in the number of trainable parameters? Can you provide more details on the three datasets used in the experiments?
 
@@ -97,12 +97,23 @@ Three recorded QA exchanges from the same paper (generation wording may vary):
 
 For an unsupported question such as “What is the first author's favorite food?”, the agent responds: “I couldn’t find enough evidence in the retrieved paper text to answer that.” It gives no citation.
 
+## Grounding evaluation
+
+Run the saved, fixed-question challenges with the local Qwen model and fresh paper briefings:
+
+```sh
+PYTHONPATH=src python evaluation/run.py
+PYTHONPATH=src python evaluation/run.py --cases evaluation/holdout_cases.json --output evaluation/holdout_results.json
+```
+
+The [development results](evaluation/results.json) cover DPO and SimCLR (8 answerable questions, 2 unsupported questions); the [third-paper results](evaluation/holdout_results.json) cover chain-of-thought prompting (3 answerable, 1 unsupported). On the recorded run, all 11 answerable questions received cited answers and all 3 unrelated questions abstained. This is a **small development challenge**, not an untouched estimate of accuracy across arXiv: failures on these papers informed code changes. The case files, exact answers, copied support quotes, and citation metadata are committed so reviewers can inspect every claim. Exact expected-term matching succeeds for 8 of 11 answerable answers. The three misses use “binary cross entropy” for “classification,” “nonlinear transformation” for “projection head,” and “∼100B parameters” for “large.” The middle answer conveys the transformation but does not name the projection head, so it is less precise than desired. PDF line-break artifacts and figure text also make some copied answers verbose. Review cited PDF pages for high-stakes use; these checks do not prove general semantic entailment.
+
 ## Design Decisions & Tradeoffs
 
 I chose one selected paper per session so the briefing and QA citations stay tied to a specific arXiv version. Topic searches use the official arXiv API and rank at most ten candidates with local MiniLM embeddings; direct IDs bypass ranking. The agent uses explicit graph stages rather than one long prompt, making retries, errors, and saved state visible. Chroma persists page-aware chunks, and QA sessions retain the selected paper, index fingerprint, and conversation turns, so a follow-up can reopen without fetching or embedding the paper again.
 
-Qwen2.5:3b runs locally without a paid API key and fits the test machine, but a small model can misread flattened tables or combine nearby facts. The agent therefore checks cited paper/version, copied source text, numbers, requested benchmark or model size, and key actions. A rejected answer draft can trigger one wider retrieval pass; if it finds no new passage or the second draft still fails, the agent abstains. This favors grounded answers over coverage and can reject an answer that is true but poorly retrieved. PDF downloads and page counts are bounded, and image-only or text-poor PDFs fail clearly because OCR is not implemented.
+Qwen2.5:3b runs locally without a paid API key and fits the test machine, but a small model can misread flattened tables or combine nearby facts. The agent therefore checks cited paper/version, copied source text, numbers, requested benchmark or model size, key actions, and whether each generated claim is supported by one quoted sentence. An uncertain paraphrase can be replaced by a relevant source sentence. A rejected answer draft can trigger one wider retrieval pass; if it finds no new passage or the second draft still fails, the agent abstains. This favors grounded answers over coverage and can reject an answer that is true but poorly retrieved. PDF downloads and page counts are bounded, and image-only or text-poor PDFs fail clearly because OCR is not implemented.
 
-With more time, I would test on a larger unseen paper set, recover table/equation structure more reliably, add OCR for scanned papers, and compare a stronger local model under the same citation checks. The current tests cover workflow behavior and failure handling, but they do not establish general accuracy across arXiv. There is no frontend, deployment, non-arXiv ingestion, or model fine-tuning because the assessment calls for a focused local agent.
+With more time, I would test on a larger truly unseen paper set, recover table/equation structure more reliably, add OCR for scanned papers, and compare a stronger local model under the same citation checks. The current tests and three-paper challenge do not establish general accuracy across arXiv. There is no frontend, deployment, non-arXiv ingestion, or model fine-tuning because the assessment calls for a focused local agent.
 
 Run the offline checks with `python -m pytest` and `python -m ruff check .`.

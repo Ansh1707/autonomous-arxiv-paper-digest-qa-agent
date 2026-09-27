@@ -1,0 +1,113 @@
+{
+  "run_at_utc": "2026-09-27T07:22:25.784229+00:00",
+  "model": "qwen2.5:3b",
+  "case_file": "holdout_cases.json",
+  "papers": [
+    {
+      "paper_id": "2201.11903v1",
+      "paper": "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models",
+      "questions": [
+        {
+          "question": "What kind of intermediate steps does chain-of-thought prompting generate?",
+          "expected_status": "answered",
+          "expected_terms": [
+            "reasoning"
+          ],
+          "status": "answered",
+          "answer": "(1) First, producing a chain of thought, in principle, allows models to decompose multi-step problems into intermediate steps, which means that additional computation can be allo-cated to problems that require more reasoning steps.",
+          "citations": [
+            {
+              "chunk_id": "2201.11903v1-3d40493ec4bc-p2-s59b76df8-g4-c1-46704c4c3683",
+              "arxiv_id": "2201.11903",
+              "version": 1,
+              "page": 2,
+              "section": "Chain of Thought"
+            }
+          ],
+          "source_quotes": [
+            {
+              "chunk_id": "2201.11903v1-3d40493ec4bc-p2-s59b76df8-g4-c1-46704c4c3683",
+              "source_quote": "(1) First, producing a chain of thought, in principle, allows models to decompose multi-step problems into intermediate steps, which means that additional computation can be allo-cated to problems that require more reasoning steps."
+            }
+          ],
+          "status_match": true,
+          "terms_present": true,
+          "terms_in_support": true,
+          "error": null
+        },
+        {
+          "question": "What scale of language models does the paper say chain-of-thought prompting works with?",
+          "expected_status": "answered",
+          "expected_terms": [
+            "large"
+          ],
+          "status": "answered",
+          "answer": "Notably, chain of thought prompting does better than standard prompting only at the scale of ∼100B parameters; models of smaller scale produced fluent but illogical chains of thought, leading to lower performance than standard prompting.",
+          "citations": [
+            {
+              "chunk_id": "2201.11903v1-3d40493ec4bc-p3-s219c4a6c-g6-c1-27599bbb5f04",
+              "arxiv_id": "2201.11903",
+              "version": 1,
+              "page": 3,
+              "section": "Results"
+            }
+          ],
+          "source_quotes": [
+            {
+              "chunk_id": "2201.11903v1-3d40493ec4bc-p3-s219c4a6c-g6-c1-27599bbb5f04",
+              "source_quote": "Notably, chain of thought prompting does better than standard prompting only at the scale of ∼100B parameters; models of smaller scale produced fluent but illogical chains of thought, leading to lower performance than standard prompting."
+            }
+          ],
+          "status_match": true,
+          "terms_present": false,
+          "terms_in_support": false,
+          "error": null
+        },
+        {
+          "question": "Which arithmetic reasoning benchmark is named in the paper?",
+          "expected_status": "answered",
+          "expected_terms": [
+            "GSM8K"
+          ],
+          "status": "answered",
+          "answer": "Following both the Math Word Problem Repos-itory (Koncel-Kedziorski et al., 2016), and more-recent benchmarks (Cobbe et al., 2021), we consider the following six datasets: (1) SingleOp (Roy et al., 2015), (2) SingleEq (Koncel-Kedziorski et al., 2015), (3) AddSub (Hosseini et al., 2014), (4) ASDiv (Miao et al., 2020), (5) MultiArith (Roy & Roth, 2015), and (6) GSM8K (Cobbe et al., 2021).",
+          "citations": [
+            {
+              "chunk_id": "2201.11903v1-3d40493ec4bc-p2-s59b76df8-g4-c4-33ea158f35ab",
+              "arxiv_id": "2201.11903",
+              "version": 1,
+              "page": 2,
+              "section": "Chain of Thought"
+            }
+          ],
+          "source_quotes": [
+            {
+              "chunk_id": "2201.11903v1-3d40493ec4bc-p2-s59b76df8-g4-c4-33ea158f35ab",
+              "source_quote": "Following both the Math Word Problem Repos-itory (Koncel-Kedziorski et al., 2016), and more-recent benchmarks (Cobbe et al., 2021), we consider the following six datasets: (1) SingleOp (Roy et al., 2015), (2) SingleEq (Koncel-Kedziorski et al., 2015), (3) AddSub (Hosseini et al., 2014), (4) ASDiv (Miao et al., 2020), (5) MultiArith (Roy & Roth, 2015), and (6) GSM8K (Cobbe et al., 2021)."
+            }
+          ],
+          "status_match": true,
+          "terms_present": true,
+          "terms_in_support": true,
+          "error": null
+        },
+        {
+          "question": "What is the first author's favorite food?",
+          "expected_status": "insufficient_evidence",
+          "expected_terms": [],
+          "status": "insufficient_evidence",
+          "answer": "I couldn’t find enough evidence in the retrieved paper text to answer that.",
+          "citations": [],
+          "source_quotes": [],
+          "status_match": true,
+          "terms_present": true,
+          "terms_in_support": true,
+          "error": null
+        }
+      ],
+      "briefing_artifact": "2201.11903v1-22c1bd5c5dce-b6.json",
+      "pdf_sha256": "3d40493ec4bcba922882db6e29e394eb9a2449721a5eb94f05e47aee7ad46752",
+      "index_fingerprint": "22c1bd5c5dce07e8cf1b5cb5e7702a192df67f8f75cdfebe590b269dc9e2af81"
+    }
+  ]
+}

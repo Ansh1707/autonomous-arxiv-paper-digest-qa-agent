@@ -1,0 +1,276 @@
+{
+  "run_at_utc": "2026-09-27T07:17:57.573908+00:00",
+  "model": "qwen2.5:3b",
+  "case_file": "cases.json",
+  "papers": [
+    {
+      "paper_id": "2305.18290v2",
+      "paper": "Direct Preference Optimization",
+      "questions": [
+        {
+          "question": "What additional model does DPO avoid training?",
+          "expected_status": "answered",
+          "expected_terms": [
+            "reward model"
+          ],
+          "status": "answered",
+          "answer": "This change-of-variables approach avoids fitting an explicit, standalone reward model, while still optimizing under existing models of human preferences, such as the Bradley-Terry model.",
+          "citations": [
+            {
+              "chunk_id": "2305.18290v2-a280dc33571c-p4-s9bc5b4a6-g8-c0-9cec3a83bd56",
+              "arxiv_id": "2305.18290",
+              "version": 2,
+              "page": 4,
+              "section": "Direct Preference Optimization"
+            }
+          ],
+          "source_quotes": [
+            {
+              "chunk_id": "2305.18290v2-a280dc33571c-p4-s9bc5b4a6-g8-c0-9cec3a83bd56",
+              "source_quote": "This change-of-variables approach avoids fitting an explicit, standalone reward model, while still optimizing under existing models of human preferences, such as the Bradley-Terry model."
+            }
+          ],
+          "status_match": true,
+          "terms_present": true,
+          "terms_in_support": true,
+          "error": null
+        },
+        {
+          "question": "What kind of human feedback does DPO learn from?",
+          "expected_status": "answered",
+          "expected_terms": [
+            "preference"
+          ],
+          "status": "answered",
+          "answer": "In contrast, DPO directly optimizes for the policy best satisfying the preferences with a simple classification objective, fitting an implicit reward model whose corresponding optimal policy can be extracted in closed form.",
+          "citations": [
+            {
+              "chunk_id": "2305.18290v2-a280dc33571c-p2-sb605350b-g3-c0-619ead1e6440",
+              "arxiv_id": "2305.18290",
+              "version": 2,
+              "page": 2,
+              "section": "Introduction"
+            }
+          ],
+          "source_quotes": [
+            {
+              "chunk_id": "2305.18290v2-a280dc33571c-p2-sb605350b-g3-c0-619ead1e6440",
+              "source_quote": "In contrast, DPO directly optimizes for the policy best satisfying the preferences with a simple classification objective, fitting an implicit reward model whose corresponding optimal policy can be extracted in closed form."
+            }
+          ],
+          "status_match": true,
+          "terms_present": true,
+          "terms_in_support": true,
+          "error": null
+        },
+        {
+          "question": "Does DPO require sampling from the language model during fine-tuning?",
+          "expected_status": "answered",
+          "expected_terms": [
+            "sampling"
+          ],
+          "status": "answered",
+          "answer": "The resulting algorithm, which we call Direct Prefer-ence Optimization (DPO), is stable, performant, and computationally lightweight, eliminating the need for sampling from the LM during fine-tuning or performing significant hyperparameter tuning.",
+          "citations": [
+            {
+              "chunk_id": "2305.18290v2-a280dc33571c-p1-sd21b4a64-g1-c1-79a00ad3c74f",
+              "arxiv_id": "2305.18290",
+              "version": 2,
+              "page": 1,
+              "section": "Abstract"
+            }
+          ],
+          "source_quotes": [
+            {
+              "chunk_id": "2305.18290v2-a280dc33571c-p1-sd21b4a64-g1-c1-79a00ad3c74f",
+              "source_quote": "The resulting algorithm, which we call Direct Prefer-ence Optimization (DPO), is stable, performant, and computationally lightweight, eliminating the need for sampling from the LM during fine-tuning or performing significant hyperparameter tuning."
+            }
+          ],
+          "status_match": true,
+          "terms_present": true,
+          "terms_in_support": true,
+          "error": null
+        },
+        {
+          "question": "What kind of loss is used to optimize the policy in DPO?",
+          "expected_status": "answered",
+          "expected_terms": [
+            "classification"
+          ],
+          "status": "answered",
+          "answer": "Given a dataset of human preferences over model responses, DPO can therefore optimize a policy using a simple binary cross entropy objective, producing the optimal policy to an implicit reward function fit to the preference data.",
+          "citations": [
+            {
+              "chunk_id": "2305.18290v2-a280dc33571c-p2-sb605350b-g3-c3-1eb5d999f556",
+              "arxiv_id": "2305.18290",
+              "version": 2,
+              "page": 2,
+              "section": "Introduction"
+            }
+          ],
+          "source_quotes": [
+            {
+              "chunk_id": "2305.18290v2-a280dc33571c-p2-sb605350b-g3-c3-1eb5d999f556",
+              "source_quote": "Given a dataset of human preferences over model responses, DPO can therefore optimize a policy using a simple binary cross entropy objective, producing the optimal policy to an implicit reward function fit to the preference data."
+            }
+          ],
+          "status_match": true,
+          "terms_present": false,
+          "terms_in_support": false,
+          "error": null
+        },
+        {
+          "question": "What is the first author's favorite food?",
+          "expected_status": "insufficient_evidence",
+          "expected_terms": [],
+          "status": "insufficient_evidence",
+          "answer": "I couldn’t find enough evidence in the retrieved paper text to answer that.",
+          "citations": [],
+          "source_quotes": [],
+          "status_match": true,
+          "terms_present": true,
+          "terms_in_support": true,
+          "error": null
+        }
+      ],
+      "briefing_artifact": "2305.18290v2-f30e593c0fed-b6.json",
+      "pdf_sha256": "a280dc33571ceb07c9ede5fc997f81162c5491080c9ef3f2abe13bfd0c713bfd",
+      "index_fingerprint": "f30e593c0fed8eae7789e08c7bc976ba26dd2f2f78635ea6de9c633a70d2a2dd"
+    },
+    {
+      "paper_id": "2002.05709v3",
+      "paper": "SimCLR",
+      "questions": [
+        {
+          "question": "Which two data augmentations are particularly important for SimCLR?",
+          "expected_status": "answered",
+          "expected_terms": [
+            "crop",
+            "color"
+          ],
+          "status": "answered",
+          "answer": "One composition of augmentations stands out: random crop-ping and random color distortion.",
+          "citations": [
+            {
+              "chunk_id": "2002.05709v3-e1b10db76ade-p5-sb72fb029-g9-c1-9bf2d9b9d0c0",
+              "arxiv_id": "2002.05709",
+              "version": 3,
+              "page": 5,
+              "section": "Training with Large Batch Size"
+            }
+          ],
+          "source_quotes": [
+            {
+              "chunk_id": "2002.05709v3-e1b10db76ade-p5-sb72fb029-g9-c1-9bf2d9b9d0c0",
+              "source_quote": "One composition of augmentations stands out: random crop-ping and random color distortion."
+            }
+          ],
+          "status_match": true,
+          "terms_present": true,
+          "terms_in_support": true,
+          "error": null
+        },
+        {
+          "question": "What does SimCLR use between the representation and the contrastive loss?",
+          "expected_status": "answered",
+          "expected_terms": [
+            "projection head"
+          ],
+          "status": "answered",
+          "answer": "We show that (1) composition of data augmentations plays a critical role in defining effective predictive tasks, (2) introducing a learn-able nonlinear transformation between the repre-sentation and the contrastive loss substantially im-proves the quality of the learned representations, and (3) contrastive learning benefits from larger batch sizes and more training steps compared to supervised learning.",
+          "citations": [
+            {
+              "chunk_id": "2002.05709v3-e1b10db76ade-p1-sd21b4a64-g1-c0-2612e87d1857",
+              "arxiv_id": "2002.05709",
+              "version": 3,
+              "page": 1,
+              "section": "Abstract"
+            }
+          ],
+          "source_quotes": [
+            {
+              "chunk_id": "2002.05709v3-e1b10db76ade-p1-sd21b4a64-g1-c0-2612e87d1857",
+              "source_quote": "We show that (1) composition of data augmentations plays a critical role in defining effective predictive tasks, (2) introducing a learn-able nonlinear transformation between the repre-sentation and the contrastive loss substantially im-proves the quality of the learned representations, and (3) contrastive learning benefits from larger batch sizes and more training steps compared to supervised learning."
+            }
+          ],
+          "status_match": true,
+          "terms_present": false,
+          "terms_in_support": false,
+          "error": null
+        },
+        {
+          "question": "What architecture is used for SimCLR's base encoder?",
+          "expected_status": "answered",
+          "expected_terms": [
+            "ResNet"
+          ],
+          "status": "answered",
+          "answer": "We opt for simplicity and adopt the commonly used ResNet (He et al., 2016) Maximize agreement zi zj g(·) g(·) ←−Representation −→ hi hj f(·) f(·) ̃xi ̃xj t ∼T t′ ∼T x Figure 2.",
+          "citations": [
+            {
+              "chunk_id": "2002.05709v3-e1b10db76ade-p2-sc627dc62-g5-c1-d87048d80ae1",
+              "arxiv_id": "2002.05709",
+              "version": 3,
+              "page": 2,
+              "section": "The Contrastive Learning Framework"
+            }
+          ],
+          "source_quotes": [
+            {
+              "chunk_id": "2002.05709v3-e1b10db76ade-p2-sc627dc62-g5-c1-d87048d80ae1",
+              "source_quote": "We opt for simplicity and adopt the commonly used ResNet (He et al., 2016) Maximize agreement zi zj g(·) g(·) ←−Representation −→ hi hj f(·) f(·) ̃xi ̃xj t ∼T t′ ∼T x Figure 2."
+            }
+          ],
+          "status_match": true,
+          "terms_present": true,
+          "terms_in_support": true,
+          "error": null
+        },
+        {
+          "question": "Does SimCLR benefit from larger batch sizes?",
+          "expected_status": "answered",
+          "expected_terms": [
+            "batch"
+          ],
+          "status": "answered",
+          "answer": "We show that (1) composition of data augmentations plays a critical role in defining effective predictive tasks, (2) introducing a learn-able nonlinear transformation between the repre-sentation and the contrastive loss substantially im-proves the quality of the learned representations, and (3) contrastive learning benefits from larger batch sizes and more training steps compared to supervised learning.",
+          "citations": [
+            {
+              "chunk_id": "2002.05709v3-e1b10db76ade-p1-sd21b4a64-g1-c0-2612e87d1857",
+              "arxiv_id": "2002.05709",
+              "version": 3,
+              "page": 1,
+              "section": "Abstract"
+            }
+          ],
+          "source_quotes": [
+            {
+              "chunk_id": "2002.05709v3-e1b10db76ade-p1-sd21b4a64-g1-c0-2612e87d1857",
+              "source_quote": "We show that (1) composition of data augmentations plays a critical role in defining effective predictive tasks, (2) introducing a learn-able nonlinear transformation between the repre-sentation and the contrastive loss substantially im-proves the quality of the learned representations, and (3) contrastive learning benefits from larger batch sizes and more training steps compared to supervised learning."
+            }
+          ],
+          "status_match": true,
+          "terms_present": true,
+          "terms_in_support": true,
+          "error": null
+        },
+        {
+          "question": "What is the first author's favorite food?",
+          "expected_status": "insufficient_evidence",
+          "expected_terms": [],
+          "status": "insufficient_evidence",
+          "answer": "I couldn’t find enough evidence in the retrieved paper text to answer that.",
+          "citations": [],
+          "source_quotes": [],
+          "status_match": true,
+          "terms_present": true,
+          "terms_in_support": true,
+          "error": null
+        }
+      ],
+      "briefing_artifact": "2002.05709v3-facfab08aedd-b6.json",
+      "pdf_sha256": "e1b10db76adeb0d21a014b9abcf42f6a6af928540c223f010fa1d8c293d9d105",
+      "index_fingerprint": "facfab08aedd2453c230713affed25e9136279154664433e57c8abbec59fd30b"
+    }
+  ]
+}

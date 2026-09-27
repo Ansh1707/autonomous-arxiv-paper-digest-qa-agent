@@ -22,7 +22,7 @@ from arxiv_agent.services.indexing import ArxivIndexServices, ChromaIndexStore
 from arxiv_agent.settings import Settings
 
 logger = logging.getLogger(__name__)
-EVIDENCE_VERSION = 4
+EVIDENCE_VERSION = 5
 FACETS = (
     (
         "problem",
@@ -35,7 +35,10 @@ FACETS = (
         "method",
         2,
         "What method or architecture does the paper propose and how does it work?",
-        ("our method", "model architecture", "method", "approach", "applying", "model"),
+        (
+            "our method", "model architecture", "method", "approach", "framework",
+            "applying", "model", "training",
+        ),
         re.compile(r"\b(propos|method|approach|architect|adapt|train|attention)", re.I),
     ),
     (

@@ -24,7 +24,7 @@ from arxiv_agent.services.selection import EmbeddingRanker
 from arxiv_agent.settings import Settings
 
 logger = logging.getLogger(__name__)
-_NUMBERED = re.compile(r"^(?:\d+(?:\.\d+)*|[A-Z](?:\.\d+)*)$")
+_NUMBERED = re.compile(r"^(?:\d+(?:\.\d+)*|[A-Z](?:\.\d+)*)\.?$")
 _REFERENCE = re.compile(r"^\[\d+\]")
 _CAPTION = re.compile(r"^(?:Figure|Fig\.|Table)\s+\d+[.:]", re.IGNORECASE)
 _UNNUMBERED = {
@@ -50,7 +50,7 @@ def _heading(raw: str, x0: float, page_width: float) -> str | None:
         line = _clean(lines[0])
         if line.casefold() in _UNNUMBERED:
             return "References" if line.casefold() == "bibliography" else line.title()
-        match = re.fullmatch(r"(?:\d+(?:\.\d+)*|[A-Z](?:\.\d+)*)\s+(.+)", line)
+        match = re.fullmatch(r"(?:\d+(?:\.\d+)*|[A-Z](?:\.\d+)*)\.?\s+(.+)", line)
         if (
             match and x0 <= page_width * 0.3
             and 3 <= len(match[1]) <= 110 and len(match[1].split()) <= 15
@@ -196,6 +196,8 @@ class PdfParser:
                     page_chars = 0
                     for index, raw in enumerate(ordered, start=1):
                         text = _clean(raw[4])
+                        if number > 1 and text.casefold() == paper.title.casefold():
+                            continue  # Repeated running title is a page header, not a section.
                         heading = _heading(raw[4], raw[0], page.rect.width)
                         if heading:
                             if blocks:

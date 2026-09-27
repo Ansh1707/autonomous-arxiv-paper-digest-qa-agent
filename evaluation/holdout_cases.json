@@ -1,0 +1,12 @@
+[
+  {
+    "paper_id": "2201.11903v1",
+    "paper": "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models",
+    "questions": [
+      {"question": "What kind of intermediate steps does chain-of-thought prompting generate?", "expect": "answered", "terms": ["reasoning"]},
+      {"question": "What scale of language models does the paper say chain-of-thought prompting works with?", "expect": "answered", "terms": ["large"]},
+      {"question": "Which arithmetic reasoning benchmark is named in the paper?", "expect": "answered", "terms": ["GSM8K"]},
+      {"question": "What is the first author's favorite food?", "expect": "insufficient_evidence", "terms": []}
+    ]
+  }
+]

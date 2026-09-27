@@ -21,6 +21,7 @@ from arxiv_agent.services.qa import (
     AnswerDraft,
     OllamaAnswerGenerator,
     QAService,
+    _direct_source_answer,
     _essential_citations,
     _support_quote,
     load_qa_session,
@@ -222,6 +223,23 @@ def test_failed_draft_retrieves_new_evidence_and_answers(settings):
     assert store.queries[1][1] == 2 * store.queries[0][1]
 
 
+def test_model_abstention_can_recover_from_a_new_passage(settings):
+    settings = type(settings)(**(settings.model_dump() | {"evidence_chunks": 1}))
+    first = chunk(1, "Residual dropout is discussed without a rate.")
+    second = chunk(2, "The residual dropout value is 0.1.")
+    abstention = AnswerDraft(status="insufficient_evidence", text="Not stated.")
+    qa, _, generator = service(settings, [first, second], [abstention, answered(
+        text="The residual dropout value is 0.1."
+    )])
+    current = SessionState.model_validate(
+        build_qa_graph(qa, settings).invoke(state("What is the residual dropout value?"))
+    )
+    assert current.answer.status == "answered"
+    assert current.answer.citations[0].chunk_id == second.chunk_id
+    assert current.stage_history.count(Stage.REQUERY) == 1
+    assert len(generator.calls) == 2
+
+
 def test_retrieval_recovery_abstains_after_one_new_passage(settings):
     settings = type(settings)(**(
         settings.model_dump() | {"evidence_chunks": 1}
@@ -279,6 +297,87 @@ def test_answer_cannot_claim_freezing_from_trainable_matrix_quote(settings):
     current = SessionState.model_validate(build_qa_graph(qa, settings).invoke(state()))
     assert current.answer.text == ABSTENTION
     assert len(generator.calls) == 2
+
+
+def test_qa_cannot_swap_effects_between_named_methods():
+    passage = chunk(1, "Method A improves accuracy. Method B reduces memory.")
+    with pytest.raises(ValueError, match="one cited source sentence"):
+        QAService._check_draft(
+            answered(text="Method A reduces memory."),
+            [passage],
+            "What does Method A reduce?",
+        )
+
+
+def test_uncertain_paraphrase_is_replaced_with_direct_paper_sentence():
+    passage = chunk(
+        1,
+        "DPO avoids fitting an explicit, standalone reward model while using human "
+        "preferences to optimize the policy.",
+    )
+    answer, quotes = QAService._check_draft(
+        answered(text="DPO avoids training a separate reward model."),
+        [passage], "What model does DPO avoid training?",
+    )
+    assert answer.text == passage.text
+    assert quotes[0].source_quote == passage.text
+
+
+def test_direct_source_fallback_does_not_guess_yes_no_training_phase():
+    passage = chunk(
+        1,
+        "The pipeline samples completions to build an offline preference dataset.",
+    )
+    assert _direct_source_answer(
+        "Does DPO require sampling during fine-tuning?", [passage]
+    ) is None
+
+
+def test_direct_source_fallback_requires_actual_numeric_value():
+    passage = chunk(1, "Residual dropout is discussed without a rate.")
+    assert _direct_source_answer(
+        "What is the residual dropout value?", [passage]
+    ) is None
+
+
+def test_direct_source_fallback_requires_named_benchmark():
+    generic = chunk(1, "Arithmetic reasoning is a task where language models struggle.")
+    assert _direct_source_answer(
+        "Which arithmetic reasoning benchmark is named in the paper?", [generic]
+    ) is None
+
+
+def test_model_cannot_answer_named_benchmark_with_generic_topic_sentence():
+    generic = chunk(1, "Though simple, arithmetic reasoning can exhibit flat scaling.")
+    with pytest.raises(ValueError, match="does not name"):
+        QAService._check_draft(
+            answered(text=generic.text), [generic],
+            "Which arithmetic reasoning benchmark is named in the paper?",
+        )
+
+
+def test_direct_source_fallback_requires_model_scale():
+    generic = chunk(1, "Chain of thought prompting works with GPT-3 models.")
+    assert _direct_source_answer(
+        "What scale of language models does chain of thought prompting work with?", [generic]
+    ) is None
+
+
+def test_qa_cannot_reverse_an_explicit_causal_relation():
+    passage = chunk(1, "X causes Y.")
+    with pytest.raises(ValueError, match="one cited source sentence"):
+        QAService._check_draft(
+            answered(text="Y causes X."), [passage], "What causes X?"
+        )
+
+
+def test_qa_cannot_reverse_a_reported_comparison():
+    passage = chunk(1, "Method A has lower accuracy than Method B.")
+    with pytest.raises(ValueError, match="one cited source sentence"):
+        QAService._check_draft(
+            answered(text="Method A has higher accuracy than Method B."),
+            [passage], "How does Method A compare with Method B?",
+        )
 
 
 def test_adjacent_source_sentences_support_hardware_and_training_time():

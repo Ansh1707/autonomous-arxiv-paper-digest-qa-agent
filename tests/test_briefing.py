@@ -16,11 +16,50 @@ from arxiv_agent.services.briefing import (
     DraftClaim,
     _direct_method_sentence,
     _direct_result_sentence,
+    _extractive_fallback,
     _focused_problem_passage,
     _table_result_sentence,
 )
 from arxiv_agent.services.evidence import EVIDENCE_VERSION
 from arxiv_agent.services.synthetic import SyntheticServices, synthetic_paper
+
+
+def test_extractive_fallback_uses_reported_finding_not_ablation_setup():
+    setup = EvidenceNote(
+        facet="result", chunk_id="setup", page=3, section="Results",
+        text="We perform an ablation study with three variations. Results are in Table 2.",
+        source_block_ids=["b1"],
+    )
+    finding = setup.model_copy(update={
+        "chunk_id": "finding",
+        "text": "We find that the results for GPT-3 davinci are comparable with our 137B model.",
+    })
+    assert _extractive_fallback(setup) is None
+    assert _extractive_fallback(finding) == finding.text
+
+
+def test_result_fallback_skips_clipped_sentence():
+    note = EvidenceNote(
+        facet="result", chunk_id="clipped", page=3, section="Results",
+        text="three datasets, LoRA outperforms the fine-tuning baseline.",
+        source_block_ids=["b1"],
+    )
+    assert _extractive_fallback(note) is None
+
+
+def test_training_speedup_is_not_a_limitation():
+    sentence = (
+        "We observe a 25% speedup because we do not need to calculate most gradients."
+    )
+    note = EvidenceNote(
+        facet="limitation", chunk_id="c1", page=4, section="Discussion",
+        text=sentence, source_block_ids=["b1"],
+    )
+    with pytest.raises(ValueError, match="explicit drawback"):
+        BriefingBuilder._validate_claim(
+            "limitations", DraftClaim(text=sentence, chunk_id="c1", source_quote=sentence),
+            {"c1"}, {"c1": note},
+        )
 
 
 def evidence(limitation=True):
@@ -72,6 +111,33 @@ def test_conditional_comparison_cannot_become_reported_result():
         section="Evaluation", source_block_ids=["b1"],
     )
     with pytest.raises(ValueError, match="conditional comparison"):
+        BriefingBuilder._validate_claim("key_results", claim, {"c2"}, {"c2": note})
+
+
+def test_result_cannot_combine_subject_and_effect_from_different_sentences():
+    source = "Method A improves accuracy. Method B reduces memory."
+    note = EvidenceNote(
+        facet="result", text=source, chunk_id="c2", page=3,
+        section="Results", source_block_ids=["b1"],
+    )
+    claim = DraftClaim(
+        text="Method A reduces memory.", chunk_id="c2", source_quote=source
+    )
+    with pytest.raises(ValueError, match="one cited source sentence"):
+        BriefingBuilder._validate_claim("key_results", claim, {"c2"}, {"c2": note})
+
+
+def test_result_cannot_turn_selected_tasks_into_all_tasks():
+    source = "Larger models improve accuracy on selected GLUE tasks."
+    note = EvidenceNote(
+        facet="result", text=source, chunk_id="c2", page=8,
+        section="Results", source_block_ids=["b1"],
+    )
+    claim = DraftClaim(
+        text="Larger models improve accuracy on all GLUE tasks.",
+        chunk_id="c2", source_quote=source,
+    )
+    with pytest.raises(ValueError, match="one cited source sentence"):
         BriefingBuilder._validate_claim("key_results", claim, {"c2"}, {"c2": note})
 
 

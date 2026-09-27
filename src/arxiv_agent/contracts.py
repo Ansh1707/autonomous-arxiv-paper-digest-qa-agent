@@ -120,7 +120,7 @@ class ParsedSection(Record):
 
 
 class ParsedPaper(Record):
-    schema_version: Literal[3] = 3
+    schema_version: Literal[4] = 4
     paper: PaperMetadata
     pdf_checksum: Text
     page_count: int = Field(ge=1)

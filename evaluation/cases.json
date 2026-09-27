@@ -1,0 +1,24 @@
+[
+  {
+    "paper_id": "2305.18290v2",
+    "paper": "Direct Preference Optimization",
+    "questions": [
+      {"question": "What additional model does DPO avoid training?", "expect": "answered", "terms": ["reward model"]},
+      {"question": "What kind of human feedback does DPO learn from?", "expect": "answered", "terms": ["preference"]},
+      {"question": "Does DPO require sampling from the language model during fine-tuning?", "expect": "answered", "terms": ["sampling"]},
+      {"question": "What kind of loss is used to optimize the policy in DPO?", "expect": "answered", "terms": ["classification"]},
+      {"question": "What is the first author's favorite food?", "expect": "insufficient_evidence", "terms": []}
+    ]
+  },
+  {
+    "paper_id": "2002.05709v3",
+    "paper": "SimCLR",
+    "questions": [
+      {"question": "Which two data augmentations are particularly important for SimCLR?", "expect": "answered", "terms": ["crop", "color"]},
+      {"question": "What does SimCLR use between the representation and the contrastive loss?", "expect": "answered", "terms": ["projection head"]},
+      {"question": "What architecture is used for SimCLR's base encoder?", "expect": "answered", "terms": ["ResNet"]},
+      {"question": "Does SimCLR benefit from larger batch sizes?", "expect": "answered", "terms": ["batch"]},
+      {"question": "What is the first author's favorite food?", "expect": "insufficient_evidence", "terms": []}
+    ]
+  }
+]
