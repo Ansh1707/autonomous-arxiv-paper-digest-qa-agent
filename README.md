@@ -124,4 +124,8 @@ Qwen2.5:3b runs locally without a paid API key and fits the test machine, but a 
 
 With more time, I would test on a larger truly unseen paper set, improve equation and irregular-table recovery, and compare a stronger local model under the same citation checks. The current tests and three-paper challenge do not establish general accuracy across arXiv. There is no frontend, deployment, non-arXiv ingestion, or model fine-tuning because the assessment calls for a focused local agent.
 
+## Reflection
+
+The most consequential choice was to keep paper selection, parsing, evidence extraction, briefing, and QA as visible state transitions. That makes failures easier to locate and lets a QA turn reopen the exact paper version and index used for its briefing. Grounding checks and abstention improved trustworthiness, but the recorded SimCLR case shows the limit of that approach: the right passage was retrieved and Qwen still declined to answer. Broader topic search improved candidate recall in the five recorded cases, while one intended paper ranked 45th, so selection still needs human review for ambiguous topics. These observations are why the next engineering work would focus on better relevance measurement and answer evaluation, not a UI.
+
 Run the offline checks with `python -m pytest` and `python -m ruff check .`.
