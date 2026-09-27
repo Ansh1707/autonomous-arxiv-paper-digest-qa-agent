@@ -34,6 +34,7 @@ def main() -> int:
     for paper in cases:
         paper_id = paper["paper_id"]
         row = {"paper_id": paper_id, "paper": paper["paper"], "questions": []}
+        briefing_source = paper_id
         if not args.reuse_briefings:
             services = ArxivBriefingServices(
                 settings, InputUnderstandingServices(OllamaTopicInterpreter(settings))
@@ -49,10 +50,11 @@ def main() -> int:
                 results["papers"].append(row)
                 continue
             row["briefing_artifact"] = Path(briefing_state.output_paths[0]).name
+            briefing_source = briefing_state.output_paths[0]
             row["pdf_sha256"] = briefing_state.pdf_checksum
             row["index_fingerprint"] = briefing_state.index.fingerprint
         for case in paper["questions"]:
-            state = load_qa_session(settings, paper_id)
+            state = load_qa_session(settings, briefing_source)
             row.setdefault("briefing_artifact", Path(state.output_paths[0]).name)
             row.setdefault("index_fingerprint", state.index.fingerprint)
             state.question = case["question"]

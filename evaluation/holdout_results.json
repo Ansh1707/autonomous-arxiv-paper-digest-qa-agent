@@ -1,5 +1,5 @@
 {
-  "run_at_utc": "2026-09-27T07:22:25.784229+00:00",
+  "run_at_utc": "2026-09-27T09:48:52.151694+00:00",
   "model": "qwen2.5:3b",
   "case_file": "holdout_cases.json",
   "papers": [
@@ -105,9 +105,9 @@
           "error": null
         }
       ],
-      "briefing_artifact": "2201.11903v1-22c1bd5c5dce-b6.json",
+      "briefing_artifact": "2201.11903v1-3860cfb0a3da-b6.json",
       "pdf_sha256": "3d40493ec4bcba922882db6e29e394eb9a2449721a5eb94f05e47aee7ad46752",
-      "index_fingerprint": "22c1bd5c5dce07e8cf1b5cb5e7702a192df67f8f75cdfebe590b269dc9e2af81"
+      "index_fingerprint": "3860cfb0a3da97677ace47ea24c69130c9504217900ccd0e3ac274c5673b9560"
     }
   ]
 }

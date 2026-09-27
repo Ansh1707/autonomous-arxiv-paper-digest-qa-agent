@@ -1,0 +1,175 @@
+{
+  "run_at_utc": "2026-09-27T09:14:39.263648+00:00",
+  "pool_limits": {
+    "relevance": 30,
+    "oldest": 50,
+    "phrase": 20
+  },
+  "queries": [
+    {
+      "topic": "low rank adaptation for large language models",
+      "expected_id": "2106.09685",
+      "candidate_count": 92,
+      "expected_rank": 3,
+      "top_five": [
+        {
+          "id": "2308.13111",
+          "title": "Bayesian Low-rank Adaptation for Large Language Models",
+          "score": 0.855709
+        },
+        {
+          "id": "2505.23808",
+          "title": "DenseLoRA: Dense Low-Rank Adaptation of Large Language Models",
+          "score": 0.813553
+        },
+        {
+          "id": "2106.09685",
+          "title": "LoRA: Low-Rank Adaptation of Large Language Models",
+          "score": 0.811598
+        },
+        {
+          "id": "2406.01775",
+          "title": "OLoRA: Orthonormal Low-Rank Adaptation of Large Language Models",
+          "score": 0.803782
+        },
+        {
+          "id": "2311.11696",
+          "title": "Sparse Low-rank Adaptation of Pre-trained Language Models",
+          "score": 0.801897
+        }
+      ]
+    },
+    {
+      "topic": "optimize language models from human preferences without reinforcement learning",
+      "expected_id": "2305.18290",
+      "candidate_count": 78,
+      "expected_rank": 3,
+      "top_five": [
+        {
+          "id": "2406.11191",
+          "title": "A Survey on Human Preference Learning for Large Language Models",
+          "score": 0.694709
+        },
+        {
+          "id": "2404.12150",
+          "title": "Aligning language models with human preferences",
+          "score": 0.688318
+        },
+        {
+          "id": "2305.18290",
+          "title": "Direct Preference Optimization: Your Language Model is Secretly a Reward Model",
+          "score": 0.683218
+        },
+        {
+          "id": "2302.08582",
+          "title": "Pretraining Language Models with Human Preferences",
+          "score": 0.67064
+        },
+        {
+          "id": "2402.14979",
+          "title": "Optimizing Language Models for Human Preferences is a Causal Inference Problem",
+          "score": 0.667679
+        }
+      ]
+    },
+    {
+      "topic": "contrastive visual representation learning using data augmentation",
+      "expected_id": "2002.05709",
+      "candidate_count": 88,
+      "expected_rank": 7,
+      "top_five": [
+        {
+          "id": "2304.02451",
+          "title": "Adaptive Data Augmentation for Contrastive Learning",
+          "score": 0.754532
+        },
+        {
+          "id": "2303.01092",
+          "title": "ArCL: Enhancing Contrastive Learning with Augmentation-Robust Representations",
+          "score": 0.679305
+        },
+        {
+          "id": "2010.08887",
+          "title": "i-Mix: A Domain-Agnostic Strategy for Contrastive Representation Learning",
+          "score": 0.678216
+        },
+        {
+          "id": "2010.14945",
+          "title": "Graph Contrastive Learning with Adaptive Augmentation",
+          "score": 0.667876
+        },
+        {
+          "id": "2011.09941",
+          "title": "Heterogeneous Contrastive Learning: Encoding Spatial Information for Compact Visual Representations",
+          "score": 0.654302
+        }
+      ]
+    },
+    {
+      "topic": "chain of thought prompting for arithmetic reasoning",
+      "expected_id": "2201.11903",
+      "candidate_count": 51,
+      "expected_rank": 2,
+      "top_five": [
+        {
+          "id": "2406.12288",
+          "title": "An Investigation of Neuron Activation as a Unified Lens to Explain Chain-of-Thought Eliciting Arithmetic Reasoning of LLMs",
+          "score": 0.668516
+        },
+        {
+          "id": "2201.11903",
+          "title": "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models",
+          "score": 0.625881
+        },
+        {
+          "id": "2311.09277",
+          "title": "Contrastive Chain-of-Thought Prompting",
+          "score": 0.59681
+        },
+        {
+          "id": "2410.08130",
+          "title": "Think Beyond Size: Adaptive Prompting for More Effective Reasoning",
+          "score": 0.553892
+        },
+        {
+          "id": "2410.23856",
+          "title": "Can Language Models Perform Robust Reasoning in Chain-of-thought Prompting with Noisy Rationales?",
+          "score": 0.543953
+        }
+      ]
+    },
+    {
+      "topic": "quantized low rank finetuning of large language models",
+      "expected_id": "2305.14314",
+      "candidate_count": 65,
+      "expected_rank": 45,
+      "top_five": [
+        {
+          "id": "2311.12023",
+          "title": "LQ-LoRA: Low-rank Plus Quantized Matrix Decomposition for Efficient Language Model Finetuning",
+          "score": 0.770429
+        },
+        {
+          "id": "2306.08162",
+          "title": "INT2.1: Towards Fine-Tunable Quantized Large Language Models with Error Correction through Low-Rank Adaptation",
+          "score": 0.761991
+        },
+        {
+          "id": "2504.09223",
+          "title": "DL-QAT: Weight-Decomposed Low-Rank Quantization-Aware Training for Large Language Models",
+          "score": 0.747434
+        },
+        {
+          "id": "2310.08659",
+          "title": "LoftQ: LoRA-Fine-Tuning-Aware Quantization for Large Language Models",
+          "score": 0.731828
+        },
+        {
+          "id": "2407.17029",
+          "title": "Accurate and Efficient Fine-Tuning of Quantized Large Language Models Through Optimal Balance",
+          "score": 0.731544
+        }
+      ]
+    }
+  ]
+}

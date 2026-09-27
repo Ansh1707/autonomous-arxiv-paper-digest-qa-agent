@@ -1,0 +1,32 @@
+[
+  {
+    "topic": "low rank adaptation for large language models",
+    "terms": ["low rank adaptation", "large language models"],
+    "arxiv_query": "all:\"low rank adaptation\" AND all:\"language models\"",
+    "expected_id": "2106.09685"
+  },
+  {
+    "topic": "optimize language models from human preferences without reinforcement learning",
+    "terms": ["language models", "human preferences", "without reinforcement learning"],
+    "arxiv_query": "all:\"human preferences\" AND all:\"language models\"",
+    "expected_id": "2305.18290"
+  },
+  {
+    "topic": "contrastive visual representation learning using data augmentation",
+    "terms": ["contrastive visual representation learning", "data augmentation"],
+    "arxiv_query": "all:\"contrastive learning\" AND all:\"data augmentation\"",
+    "expected_id": "2002.05709"
+  },
+  {
+    "topic": "chain of thought prompting for arithmetic reasoning",
+    "terms": ["chain of thought prompting", "arithmetic reasoning"],
+    "arxiv_query": "all:\"chain of thought\" AND all:\"arithmetic reasoning\"",
+    "expected_id": "2201.11903"
+  },
+  {
+    "topic": "quantized low rank finetuning of large language models",
+    "terms": ["quantized low rank finetuning", "large language models"],
+    "arxiv_query": "all:\"quantized\" AND all:\"low rank\" AND all:\"language models\"",
+    "expected_id": "2305.14314"
+  }
+]

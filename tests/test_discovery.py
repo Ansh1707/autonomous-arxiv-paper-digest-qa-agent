@@ -4,7 +4,7 @@ from types import SimpleNamespace
 import arxiv
 import requests
 
-from arxiv_agent.contracts import SessionState, Stage
+from arxiv_agent.contracts import Intent, SessionState, Stage
 from arxiv_agent.graph import build_discovery_graph
 from arxiv_agent.services.discovery import ArxivDiscoveryServices
 from arxiv_agent.services.input_understanding import InputUnderstandingServices, TopicExtraction
@@ -44,7 +44,12 @@ class FakeClient:
 
 
 def run(settings, tmp_path, raw, responses):
-    settings = type(settings)(**(settings.model_dump() | {"data_dir": tmp_path}))
+    settings = type(settings)(**(
+        settings.model_dump() | {
+            "data_dir": tmp_path, "candidate_count": 10,
+            "candidate_oldest_count": 0, "candidate_phrase_count": 0,
+        }
+    ))
     client = FakeClient(responses)
     service = ArxivDiscoveryServices(
         settings,
@@ -106,6 +111,35 @@ def test_topic_caps_candidates_and_preserves_date_on_broadening(settings, tmp_pa
         assert search.max_results == 10
     assert " OR " in client.searches[1].query
     assert state.stage_history.count(Stage.BROADEN) == 1
+
+
+def test_topic_discovery_unions_relevance_oldest_and_phrase_pools(settings, tmp_path):
+    settings = type(settings)(**(
+        settings.model_dump() | {
+            "data_dir": tmp_path, "candidate_count": 2,
+            "candidate_oldest_count": 2, "candidate_phrase_count": 2,
+        }
+    ))
+    client = FakeClient([
+        [FakeResult("2401.00001v1"), FakeResult("2401.00002v1")],
+        [FakeResult("2201.00003v1"), FakeResult("2401.00001v1")],
+        [FakeResult("2101.00004v1")],
+    ])
+    service = ArxivDiscoveryServices(settings, InputUnderstandingServices(Interpreter()), client)
+    intent = Intent(
+        kind="topic", query="chain of thought prompting", search_terms=["chain of thought"],
+        arxiv_query='all:"chain of thought"',
+        date_from=date(2020, 1, 1), date_to=date(2025, 1, 1),
+        date_interpretation="explicit",
+    )
+    patch = service._search(SessionState(user_input=intent.query, intent=intent))
+    assert [item.paper.arxiv_id for item in patch["candidates"]] == [
+        "2401.00001", "2401.00002", "2201.00003", "2101.00004",
+    ]
+    assert len(client.searches) == 3
+    assert client.searches[1].sort_by == arxiv.SortCriterion.SubmittedDate
+    assert 'all:"chain of thought"' in client.searches[2].query
+    assert "submittedDate:[202001010000 TO 202501012359]" in client.searches[2].query
 
 
 def test_empty_search_broadens_only_once(settings, tmp_path):

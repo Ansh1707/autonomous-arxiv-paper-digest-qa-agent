@@ -91,7 +91,7 @@ def parser() -> argparse.ArgumentParser:
     )
     inspect_input.add_argument("input", help="An arXiv ID/URL or natural-language topic")
     discover = sub.add_parser(
-        "discover", help="Retrieve paper metadata or up to ten topic candidates from arXiv"
+        "discover", help="Retrieve paper metadata or a bounded topic candidate pool from arXiv"
     )
     discover.add_argument("input", help="An arXiv ID/URL or natural-language topic")
     select_paper = sub.add_parser(

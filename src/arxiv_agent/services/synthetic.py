@@ -128,7 +128,7 @@ class SyntheticServices:
                     raise StageFailure(
                         "UNREADABLE_PDF",
                         "Simulated scanned or unreadable PDF.",
-                        "Choose a text-based arXiv paper; OCR is not supported in this version.",
+                        "Check the PDF and install Tesseract with English data for OCR.",
                     )
                 return {
                     "parsed_path": "synthetic://parsed.json",

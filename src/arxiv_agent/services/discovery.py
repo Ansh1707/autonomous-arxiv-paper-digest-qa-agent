@@ -76,7 +76,7 @@ class ArxivDiscoveryServices:
         self.understanding = understanding
         if client is None:
             client = arxiv.Client(
-                page_size=settings.candidate_count,
+                page_size=max(settings.candidate_count, settings.candidate_oldest_count),
                 delay_seconds=settings.api_interval_seconds,
                 num_retries=0,  # Graph owns the strict two-retry budget.
             )
@@ -195,20 +195,60 @@ class ArxivDiscoveryServices:
         intent = state.intent
         if not intent or intent.kind != "topic" or not intent.arxiv_query:
             raise StageFailure("INVALID_INTENT", "Topic search needs a query.", "Provide a topic.")
-        key = f"{intent.arxiv_query}|{self.settings.candidate_count}"
+        key = (
+            f"v2|{intent.arxiv_query}|{intent.search_terms}|"
+            f"{self.settings.candidate_count}|{self.settings.candidate_oldest_count}|"
+            f"{self.settings.candidate_phrase_count}"
+        )
         papers = self._cached("search", key)
         warnings = list(state.warnings)
         if papers is None:
             results = self._fetch(
                 arxiv.Search(query=intent.arxiv_query, max_results=self.settings.candidate_count)
-            )
-            papers = []
-            for result in results[: self.settings.candidate_count]:
+            )[: self.settings.candidate_count]
+            if results and self.settings.candidate_oldest_count:
                 try:
-                    papers.append(_metadata(result))
+                    results.extend(self._fetch(arxiv.Search(
+                        query=intent.arxiv_query,
+                        max_results=self.settings.candidate_oldest_count,
+                        sort_by=arxiv.SortCriterion.SubmittedDate,
+                        sort_order=arxiv.SortOrder.Ascending,
+                    ))[: self.settings.candidate_oldest_count])
+                except StageFailure as exc:
+                    logger.warning("Oldest-paper search failed: %s", exc)
+                    warnings.append("Oldest-paper discovery was unavailable.")
+            first_term = intent.search_terms[0].strip() if intent.search_terms else ""
+            if (
+                results and self.settings.candidate_phrase_count
+                and len(first_term.split()) >= 3
+            ):
+                safe_phrase = re.sub(r'[^A-Za-z0-9 -]', ' ', first_term).strip()
+                phrase_query = f'all:"{safe_phrase}"'
+                if intent.date_from and intent.date_to:
+                    phrase_query += (
+                        f" AND submittedDate:[{intent.date_from:%Y%m%d}0000 "
+                        f"TO {intent.date_to:%Y%m%d}2359]"
+                    )
+                try:
+                    results.extend(self._fetch(arxiv.Search(
+                        query=phrase_query,
+                        max_results=self.settings.candidate_phrase_count,
+                    ))[: self.settings.candidate_phrase_count])
+                except StageFailure as exc:
+                    logger.warning("Phrase search failed: %s", exc)
+                    warnings.append("Phrase-based discovery was unavailable.")
+            papers = []
+            seen = set()
+            for result in results:
+                try:
+                    paper = _metadata(result)
                 except (ValueError, AttributeError, TypeError, ValidationError) as exc:
                     logger.warning("Skipping malformed arXiv result: %s", exc)
                     warnings.append("Skipped one incomplete arXiv result.")
+                    continue
+                if paper.arxiv_id not in seen:
+                    papers.append(paper)
+                    seen.add(paper.arxiv_id)
             if results and not papers:
                 raise StageFailure(
                     "BAD_METADATA", "All arXiv results had incomplete metadata.",

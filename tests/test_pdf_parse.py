@@ -1,4 +1,5 @@
 import hashlib
+import shutil
 from datetime import UTC, datetime
 from pathlib import Path
 from types import SimpleNamespace
@@ -8,7 +9,13 @@ import pymupdf
 from arxiv_agent.contracts import PaperMetadata, ParsedPaper, SessionState, Stage
 from arxiv_agent.graph import build_parse_graph
 from arxiv_agent.services.input_understanding import InputUnderstandingServices, TopicExtraction
-from arxiv_agent.services.pdf_parse import ArxivParseServices, PdfParser, _heading, _ordered_blocks
+from arxiv_agent.services.pdf_parse import (
+    ArxivParseServices,
+    PdfParser,
+    _heading,
+    _ordered_blocks,
+    _table_blocks,
+)
 
 
 def fixture_pdf(path: Path, *, abstract=True, references=True):
@@ -138,6 +145,113 @@ def test_image_only_pdf_fails_clearly(settings):
         assert "OCR" in exc.recovery
     else:
         raise AssertionError("Blank PDF should not parse")
+
+
+def test_ruled_table_rows_preserve_header_value_relationships(settings):
+    path = settings.data_dir / "pdfs" / "2106.09685v1.pdf"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    document = pymupdf.open()
+    page = document.new_page()
+    page.insert_textbox(
+        pymupdf.Rect(72, 40, 520, 92),
+        "This experiment compares two methods on the same evaluation task and reports "
+        "the measured accuracy of each method in a structured table.", fontsize=10,
+    )
+    xs, ys = [72, 210, 340, 480], [110, 140, 170, 200]
+    for x in xs:
+        page.draw_line((x, ys[0]), (x, ys[-1]))
+    for y in ys:
+        page.draw_line((xs[0], y), (xs[-1], y))
+    for i, row in enumerate([
+        ["Model", "Task", "Accuracy"],
+        ["Method A", "GLUE", "91.2"],
+        ["Method B", "GLUE", "88.1"],
+    ]):
+        for j, value in enumerate(row):
+            page.insert_text((xs[j] + 6, ys[i] + 20), value, fontsize=10)
+    document.save(path)
+    document.close()
+    _, parsed = PdfParser(settings).parse(state_for(path))
+    table = [block for block in parsed.blocks if block.kind == "table"]
+    assert len(table) == 2
+    assert "Model: Method A; Task: GLUE; Accuracy: 91.2" in table[0].text
+    assert "Model: Method B; Task: GLUE; Accuracy: 88.1" in table[1].text
+    assert all(block.page == 1 and block.bbox for block in table)
+    assert any("reconstructed table rows" in note for note in parsed.warnings)
+
+
+def test_aligned_multiline_table_fragment_preserves_each_model_row():
+    class Table:
+        def __init__(self, bbox, matrix):
+            self.bbox = bbox
+            self.matrix = matrix
+
+        def extract(self):
+            return self.matrix
+
+    header = Table((72, 100, 480, 130), [["Method", "Parameters", "Accuracy"]])
+    values = Table((72, 133, 480, 173), [["Method A\nMethod B", "1M\n2M", "91.2\n88.1"]])
+
+    class Page:
+        number = 0
+
+        def find_tables(self, **kwargs):
+            return SimpleNamespace(tables=[header, values])
+
+    rows, boxes = _table_blocks(Page())
+    assert len(rows) == 2 and len(boxes) == 2
+    assert "Method: Method A; Parameters: 1M; Accuracy: 91.2" in rows[0][4]
+    assert "Method: Method B; Parameters: 2M; Accuracy: 88.1" in rows[1][4]
+
+
+def test_aligned_metric_subcolumns_remain_attached_to_the_correct_row():
+    class Table:
+        def __init__(self, bbox, matrix):
+            self.bbox, self.matrix = bbox, matrix
+
+        def extract(self):
+            return self.matrix
+
+    header = Table((72, 100, 480, 130), [["Method", "Parameters", "WikiSQL MNLI-m SAMSum"]])
+    values = Table((72, 133, 480, 173), [[
+        "LoRA\nFine-Tune", "4.7M\n175M", "73.4 91.3 52.1/28.3/44.3\n73.0 89.5 52.0/28.0/44.5",
+    ]])
+
+    class Page:
+        number = 0
+
+        def find_tables(self, **kwargs):
+            return SimpleNamespace(tables=[header, values])
+
+    rows, _ = _table_blocks(Page())
+    assert "Method: LoRA; Parameters: 4.7M; WikiSQL: 73.4; MNLI-m: 91.3" in rows[0][4]
+    assert "Method: Fine-Tune; Parameters: 175M; WikiSQL: 73.0; MNLI-m: 89.5" in rows[1][4]
+
+
+def test_scanned_page_uses_local_ocr_when_available(settings):
+    if not shutil.which("tesseract"):
+        import pytest
+        pytest.skip("Tesseract is not installed")
+    path = settings.data_dir / "pdfs" / "2106.09685v1.pdf"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    source = pymupdf.open()
+    page = source.new_page()
+    text = (
+        "This scanned research page explains the proposed method and its experimental "
+        "evaluation. The method preserves source provenance and reports a measured "
+        "improvement across several data sets. "
+    ) * 3
+    page.insert_textbox(pymupdf.Rect(72, 70, 540, 600), text, fontsize=13)
+    image = page.get_pixmap(matrix=pymupdf.Matrix(2, 2)).tobytes("png")
+    source.close()
+    document = pymupdf.open()
+    document.new_page().insert_image(pymupdf.Rect(0, 0, 595, 842), stream=image)
+    document.save(path)
+    document.close()
+    _, parsed = PdfParser(settings).parse(state_for(path))
+    assert parsed.pages_with_text == 1
+    assert "scanned research page" in " ".join(block.text.lower() for block in parsed.blocks)
+    assert any("used local English OCR" in note for note in parsed.warnings)
 
 
 def test_changed_pdf_checksum_blocks_parsing(settings):

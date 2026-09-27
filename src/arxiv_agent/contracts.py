@@ -102,7 +102,7 @@ class ParsedBlock(Record):
     block_id: Text
     page: int = Field(ge=1)
     section: Text
-    kind: Literal["heading", "body", "caption"]
+    kind: Literal["heading", "body", "caption", "table"]
     text: Text
     bbox: tuple[float, float, float, float]
 
@@ -120,7 +120,7 @@ class ParsedSection(Record):
 
 
 class ParsedPaper(Record):
-    schema_version: Literal[4] = 4
+    schema_version: Literal[6] = 6
     paper: PaperMetadata
     pdf_checksum: Text
     page_count: int = Field(ge=1)

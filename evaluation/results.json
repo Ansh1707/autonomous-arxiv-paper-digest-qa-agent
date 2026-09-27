@@ -1,5 +1,5 @@
 {
-  "run_at_utc": "2026-09-27T07:17:57.573908+00:00",
+  "run_at_utc": "2026-09-27T09:34:18.992870+00:00",
   "model": "qwen2.5:3b",
   "case_file": "cases.json",
   "papers": [
@@ -133,9 +133,9 @@
           "error": null
         }
       ],
-      "briefing_artifact": "2305.18290v2-f30e593c0fed-b6.json",
+      "briefing_artifact": "2305.18290v2-85c75ff92530-b6.json",
       "pdf_sha256": "a280dc33571ceb07c9ede5fc997f81162c5491080c9ef3f2abe13bfd0c713bfd",
-      "index_fingerprint": "f30e593c0fed8eae7789e08c7bc976ba26dd2f2f78635ea6de9c633a70d2a2dd"
+      "index_fingerprint": "85c75ff925307b372854f994a20e573b0a0d76086db204bc482bd1d0b72b9b0f"
     },
     {
       "paper_id": "2002.05709v3",
@@ -148,26 +148,13 @@
             "crop",
             "color"
           ],
-          "status": "answered",
-          "answer": "One composition of augmentations stands out: random crop-ping and random color distortion.",
-          "citations": [
-            {
-              "chunk_id": "2002.05709v3-e1b10db76ade-p5-sb72fb029-g9-c1-9bf2d9b9d0c0",
-              "arxiv_id": "2002.05709",
-              "version": 3,
-              "page": 5,
-              "section": "Training with Large Batch Size"
-            }
-          ],
-          "source_quotes": [
-            {
-              "chunk_id": "2002.05709v3-e1b10db76ade-p5-sb72fb029-g9-c1-9bf2d9b9d0c0",
-              "source_quote": "One composition of augmentations stands out: random crop-ping and random color distortion."
-            }
-          ],
-          "status_match": true,
-          "terms_present": true,
-          "terms_in_support": true,
+          "status": "insufficient_evidence",
+          "answer": "I couldn’t find enough evidence in the retrieved paper text to answer that.",
+          "citations": [],
+          "source_quotes": [],
+          "status_match": false,
+          "terms_present": false,
+          "terms_in_support": false,
           "error": null
         },
         {
@@ -268,9 +255,9 @@
           "error": null
         }
       ],
-      "briefing_artifact": "2002.05709v3-facfab08aedd-b6.json",
+      "briefing_artifact": "2002.05709v3-414319660aa0-b6.json",
       "pdf_sha256": "e1b10db76adeb0d21a014b9abcf42f6a6af928540c223f010fa1d8c293d9d105",
-      "index_fingerprint": "facfab08aedd2453c230713affed25e9136279154664433e57c8abbec59fd30b"
+      "index_fingerprint": "414319660aa081f757bd7aa87b95d4e47887a54ad4f5a2f70f3bb4147d480868"
     }
   ]
 }

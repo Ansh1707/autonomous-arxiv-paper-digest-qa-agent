@@ -1,4 +1,4 @@
-"""Page-aware scholarly PDF text extraction; no OCR or LLM rewriting."""
+"""Page-aware PDF extraction with bounded table recovery and optional local OCR."""
 
 import hashlib
 import logging
@@ -59,10 +59,10 @@ def _heading(raw: str, x0: float, page_width: float) -> str | None:
     return None
 
 
-def _ordered_blocks(page: pymupdf.Page) -> list[tuple]:
+def _ordered_blocks(page: pymupdf.Page, blocks: list[tuple] | None = None) -> list[tuple]:
     width, height = page.rect.width, page.rect.height
-    blocks = []
-    for block in page.get_text("blocks"):
+    accepted = []
+    for block in blocks if blocks is not None else page.get_text("blocks"):
         if block[6] != 0 or not block[4].strip():
             continue
         text = _clean(block[4])
@@ -72,7 +72,8 @@ def _ordered_blocks(page: pymupdf.Page) -> list[tuple]:
             continue
         if text.lower().startswith("arxiv:") and block[2] < 0.12 * width:
             continue
-        blocks.append(block)
+        accepted.append(block)
+    blocks = accepted
     middle = width / 2
     gap = width * 0.03
     left = [b for b in blocks if b[2] <= middle + gap and (b[0] + b[2]) / 2 < middle]
@@ -93,6 +94,133 @@ def _ordered_blocks(page: pymupdf.Page) -> list[tuple]:
             ordered.append(span)
             lower = span[1]
     return ordered
+
+
+def _intersection_ratio(block: tuple, box: tuple[float, float, float, float]) -> float:
+    x0, y0, x1, y1 = block[:4]
+    overlap = max(0, min(x1, box[2]) - max(x0, box[0])) * max(
+        0, min(y1, box[3]) - max(y0, box[1])
+    )
+    return overlap / max(1, (x1 - x0) * (y1 - y0))
+
+
+def _table_blocks(
+    page: pymupdf.Page,
+) -> tuple[list[tuple], list[tuple[float, float, float, float]]]:
+    """Represent each detected table row with its column headers and cell values."""
+    rows: list[tuple] = []
+    boxes: list[tuple[float, float, float, float]] = []
+    tables = sorted(page.find_tables(strategy="lines_strict").tables, key=lambda item: item.bbox[1])
+    used = set()
+
+    def labeled(header: str, value: str) -> list[str]:
+        names, values = header.split(), value.split()
+        metric_header = re.search(
+            r"\b(?:WikiSQL|MNLI|SAMSum|BLEU|NIST|ROUGE|CIDEr|MET|accuracy|F1|score)\b",
+            header,
+            re.I,
+        )
+        aligned_metrics = (
+            len(values) > 1 and metric_header
+            and all(re.search(r"\d", item) for item in values)
+        )
+        if aligned_metrics and len(names) == len(values):
+            return [f"{name}: {item}" for name, item in zip(names, values, strict=True)]
+        if aligned_metrics and len(names) == len(values) + 1:
+            return [f"Dataset: {names[0]}"] + [
+                f"{name}: {item}"
+                for name, item in zip(names[1:], values, strict=True)
+            ]
+        return [f"{header}: {value}"]
+
+    for table_number, table in enumerate(tables):
+        if table_number in used:
+            continue
+        matrix = table.extract()
+        if not matrix or len(matrix[0]) < 2:
+            continue
+        headers = [_clean(str(cell or "")) for cell in matrix[0]]
+        if sum(bool(cell) for cell in headers) < 2:
+            continue
+        # Borderless scholarly tables often appear as one header fragment followed
+        # by one-cell-high fragments whose columns each contain aligned text lines.
+        if len(headers) >= 3 and re.match(r"^(?:method|model)$", headers[0], re.I):
+            previous_bottom = table.bbox[3]
+            aligned_found = False
+            for following in range(table_number + 1, len(tables)):
+                fragment = tables[following]
+                if following in used or fragment.bbox[1] - previous_bottom > 8:
+                    break
+                cells = fragment.extract()
+                if len(cells) != 1 or len(cells[0]) != len(headers):
+                    break
+                columns = [
+                    [part.strip() for part in str(cell or "").splitlines() if part.strip()]
+                    for cell in cells[0]
+                ]
+                count = len(columns[0])
+                if count < 2 or any(len(column) != count for column in columns):
+                    break
+                x0, y0, x1, y1 = fragment.bbox
+                for position in range(count):
+                    pairs = [
+                        item
+                        for header, column in zip(headers, columns, strict=True)
+                        if header
+                        for item in labeled(header, _clean(column[position]))
+                    ]
+                    text = (
+                        f"Table on page {page.number + 1}, aligned row {position + 1}: "
+                        + "; ".join(pairs) + "."
+                    )
+                    top = y0 + (y1 - y0) * position / count
+                    bottom = y0 + (y1 - y0) * (position + 1) / count
+                    rows.append((x0, top, x1, bottom, text, 0, 0, "table"))
+                boxes.append(tuple(float(value) for value in table.bbox))
+                boxes.append(tuple(float(value) for value in fragment.bbox))
+                used.add(following)
+                aligned_found = True
+                previous_bottom = fragment.bbox[3]
+            if aligned_found:
+                used.add(table_number)
+                continue
+        if len(matrix) < 2:
+            continue
+        table_rows = 0
+        for position, values in enumerate(matrix[1:], start=1):
+            pairs = [
+                item
+                for header, value in zip(headers, values, strict=False)
+                if header and value and _clean(str(value))
+                for item in labeled(header, _clean(str(value)))
+            ]
+            if len(pairs) < 2:
+                continue
+            text = f"Table on page {page.number + 1}, row {position}: " + "; ".join(pairs) + "."
+            bbox = table.rows[position].bbox
+            rows.append((*bbox, text, 0, 0, "table"))
+            table_rows += 1
+        if table_rows:
+            boxes.append(tuple(float(value) for value in table.bbox))
+    return rows, boxes
+
+
+def _page_blocks(page: pymupdf.Page, *, textpage=None) -> tuple[list[tuple], bool]:
+    native = list(page.get_text("blocks", textpage=textpage))
+    if textpage is not None:
+        return _ordered_blocks(page, native), False
+    try:
+        table_rows, boxes = _table_blocks(page)
+    except (RuntimeError, ValueError, IndexError) as exc:
+        logger.warning("Table detection failed on page %s: %s", page.number + 1, exc)
+        return _ordered_blocks(page, native), False
+    if not table_rows:
+        return _ordered_blocks(page, native), False
+    preserved = [
+        block for block in native
+        if not any(_intersection_ratio(block, box) >= 0.7 for box in boxes)
+    ]
+    return _ordered_blocks(page, [*preserved, *table_rows]), True
 
 
 class PdfParser:
@@ -184,7 +312,7 @@ class PdfParser:
                 ):
                     raise StageFailure(
                         "UNREADABLE_PDF", "PDF is encrypted, empty, or exceeds the page limit.",
-                        "Choose a readable text-based paper within the configured page limit.",
+                        "Choose a readable paper within the configured page limit.",
                     )
                 if state.pdf_pages and page_count != state.pdf_pages:
                     raise StageFailure(
@@ -192,13 +320,38 @@ class PdfParser:
                         "Rerun fetch-paper before parsing.",
                     )
                 for number, page in enumerate(document, start=1):
-                    ordered = _ordered_blocks(page)
+                    ordered, found_table = _page_blocks(page)
+                    native_chars = sum(
+                        char.isalnum() for raw in ordered for char in _clean(raw[4])
+                    )
+                    if native_chars < 50 and self.settings.ocr_enabled:
+                        try:
+                            textpage = page.get_textpage_ocr(
+                                language="eng", dpi=self.settings.ocr_dpi, full=True
+                            )
+                            ocr_blocks, _ = _page_blocks(page, textpage=textpage)
+                            ocr_chars = sum(
+                                char.isalnum() for raw in ocr_blocks for char in _clean(raw[4])
+                            )
+                            if ocr_chars > native_chars:
+                                ordered = ocr_blocks
+                                warnings.append(
+                                    f"Page {number} used local English OCR; verify text."
+                                )
+                        except (RuntimeError, ValueError, OSError) as exc:
+                            logger.warning("OCR failed on page %s: %s", number, exc)
+                            warnings.append(f"Page {number} OCR was unavailable or failed.")
+                    if found_table:
+                        warnings.append(
+                            f"Page {number} contains reconstructed table rows; verify cells."
+                        )
                     page_chars = 0
                     for index, raw in enumerate(ordered, start=1):
                         text = _clean(raw[4])
                         if number > 1 and text.casefold() == paper.title.casefold():
                             continue  # Repeated running title is a page header, not a section.
-                        heading = _heading(raw[4], raw[0], page.rect.width)
+                        table_row = len(raw) > 7 and raw[7] == "table"
+                        heading = None if table_row else _heading(raw[4], raw[0], page.rect.width)
                         if heading:
                             if blocks:
                                 sections.append(ParsedSection(
@@ -208,6 +361,8 @@ class PdfParser:
                             current = heading
                             section_start = number
                             kind = "heading"
+                        elif table_row:
+                            kind = "table"
                         else:
                             kind = "caption" if _CAPTION.match(text) else "body"
                         blocks.append(ParsedBlock(
@@ -224,12 +379,12 @@ class PdfParser:
         except (pymupdf.FileDataError, pymupdf.EmptyFileError, RuntimeError, ValueError) as exc:
             raise StageFailure(
                 "UNREADABLE_PDF", "PDF text could not be extracted reliably.",
-                "Choose a text-based paper; OCR is not supported yet.",
+                "Check the PDF and local Tesseract installation, then retry.",
             ) from exc
         if total_chars < 200 or pages_with_text < max(1, (page_count + 4) // 5):
             raise StageFailure(
                 "UNREADABLE_PDF", "PDF contains too little selectable text for reliable parsing.",
-                "Choose a text-based arXiv paper; OCR is not supported yet.",
+                "Install Tesseract with English data for OCR, or choose another PDF.",
             )
         sections.append(ParsedSection(
             title=current, page_start=section_start, page_end=page_count

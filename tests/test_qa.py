@@ -1,3 +1,5 @@
+import hashlib
+
 import pytest
 
 from arxiv_agent.contracts import (
@@ -7,6 +9,9 @@ from arxiv_agent.contracts import (
     EvidenceBundle,
     EvidenceClaim,
     EvidenceNote,
+    ParsedBlock,
+    ParsedPaper,
+    ParsedSection,
     QAAnswer,
     RetrievalIndex,
     SessionState,
@@ -16,11 +21,13 @@ from arxiv_agent.graph import build_qa_graph
 from arxiv_agent.services.base import StageFailure
 from arxiv_agent.services.briefing import BRIEFING_VERSION, BriefingArtifact, QuoteAudit
 from arxiv_agent.services.evidence import EVIDENCE_VERSION
+from arxiv_agent.services.indexing import ChromaIndexStore
 from arxiv_agent.services.qa import (
     ABSTENTION,
     AnswerDraft,
     OllamaAnswerGenerator,
     QAService,
+    _current_briefing_path,
     _direct_source_answer,
     _essential_citations,
     _support_quote,
@@ -127,6 +134,26 @@ def test_retrieval_filters_references_duplicates_and_other_papers(settings):
     qa, _, _ = service(settings, [bad], [answered()])
     with pytest.raises(StageFailure, match="another paper/version"):
         qa.run_stage(Stage.RETRIEVE, state())
+
+
+def test_weak_lexical_overlap_cannot_bypass_dense_distance_cutoff(settings):
+    weak = chunk(1, "Training uses an adapter in each layer.")
+    store = Store([(weak, 0.96)])
+    qa = QAService(settings, store=store, generator=Generator([]), tokenizer=Tokenizer())
+    chosen = qa.run_stage(
+        Stage.RETRIEVE, state("What causes training memory to decrease?")
+    )["retrieved_chunks"]
+    assert chosen == []
+
+
+def test_multi_term_lexical_rescue_has_separate_relevance_gate(settings):
+    direct = chunk(1, "Training with the adapter reduces memory use.")
+    store = Store([(direct, 0.96)])
+    qa = QAService(settings, store=store, generator=Generator([]), tokenizer=Tokenizer())
+    chosen = qa.run_stage(
+        Stage.RETRIEVE, state("How does training reduce memory use?")
+    )["retrieved_chunks"]
+    assert chosen == [direct]
 
 
 def test_fresh_retrieval_uses_questions_only_for_referential_followup(settings):
@@ -818,3 +845,28 @@ def test_saved_briefing_reopens_only_with_matching_evidence(settings):
     path.with_suffix(".md").unlink()
     with pytest.raises(StageFailure, match="identity does not match"):
         load_qa_session(settings, str(path))
+
+
+def test_reopening_prefers_briefing_for_current_parsed_pdf(settings):
+    safe_id = "2106.09685v1"
+    pdf_path = settings.data_dir / "pdfs" / f"{safe_id}.pdf"
+    pdf_path.parent.mkdir(parents=True)
+    pdf_path.write_bytes(b"fixture PDF checksum")
+    checksum = hashlib.sha256(pdf_path.read_bytes()).hexdigest()
+    parsed = ParsedPaper(
+        paper=synthetic_paper().model_copy(update={"arxiv_id": "2106.09685"}),
+        pdf_checksum=checksum, page_count=1, pages_with_text=1,
+        abstract="A paper abstract.", abstract_source="metadata",
+        sections=[ParsedSection(title="Introduction", page_start=1, page_end=1)],
+        blocks=[ParsedBlock(
+            block_id="p1-b1", page=1, section="Introduction", kind="body",
+            text="The method reports a measured result.", bbox=(72, 72, 300, 90),
+        )],
+    )
+    parsed_path = settings.data_dir / "parsed" / f"{safe_id}-{checksum[:12]}.json"
+    parsed_path.parent.mkdir(parents=True)
+    parsed_path.write_text(parsed.model_dump_json())
+    _, fingerprint = ChromaIndexStore(settings)._identity(parsed)
+    current = settings.output_dir / f"{safe_id}-{fingerprint[:12]}-b{BRIEFING_VERSION}.json"
+    stale = settings.output_dir / f"{safe_id}-000000000000-b{BRIEFING_VERSION}.json"
+    assert _current_briefing_path(settings, safe_id, [stale, current]) == current.resolve()

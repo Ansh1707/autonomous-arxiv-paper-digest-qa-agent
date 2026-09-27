@@ -1,5 +1,6 @@
 """Grounded, citation-checked question answering over one selected paper."""
 
+import hashlib
 import json
 import logging
 import math
@@ -16,6 +17,7 @@ from arxiv_agent.contracts import (
     Citation,
     ConversationTurn,
     EvidenceBundle,
+    ParsedPaper,
     QAAnswer,
     QAQuote,
     Record,
@@ -669,12 +671,15 @@ class QAService:
             key=lambda item: (-item[0], item[1].page_start, item[1].chunk_id),
         )
         lexical_hits = [
-            (chunk, 0.0) for score, chunk in lexical[:4 if recovering else 2] if score > 0
+            (chunk, None, "lexical") for score, chunk in lexical[:4 if recovering else 2]
+            if score >= 2 and len(terms & document_terms[chunk.chunk_id]) >= max(
+                2, (len(terms) + 1) // 2
+            )
         ]
         dropout_phrase = re.search(r"\b(?:residual|attention)\s+dropout\b", query, re.I)
         priority_hits = (
             [
-                (chunk, 0.0) for chunk in corpus
+                (chunk, None, "priority") for chunk in corpus
                 if dropout_phrase.group().casefold() in _normalize(chunk.text)
             ][:1]
             if dropout_phrase else []
@@ -707,13 +712,16 @@ class QAService:
             key=lambda item: (-item[0], item[1].page_start, item[1].chunk_id),
         )
         exact_phrase_hits = [
-            (chunk, 0.0) for score, chunk in phrase_hits[:4 if recovering else 2] if score > 0
+            (chunk, None, "phrase") for score, chunk in phrase_hits[:4 if recovering else 2]
+            if score > 0 and len(terms & document_terms[chunk.chunk_id]) >= max(
+                2, (len(terms) + 1) // 2
+            )
         ]
         model_size = re.search(r"\b\d+B\b", query, re.I)
         asks_time = bool(re.search(r"\b(?:time|hours?|duration)\b", query, re.I))
         asks_memory = bool(re.search(r"\b(?:memory|GPU|GB)\b", query, re.I))
         size_fact_hits = [
-            (chunk, 0.0)
+            (chunk, None, "size_fact")
             for chunk in corpus
             if model_size and any(
                 re.search(re.escape(model_size.group()), sentence, re.I)
@@ -726,7 +734,10 @@ class QAService:
         ][:1]
         # Keep the normal pool bounded; only a failed draft doubles its depth.
         # Put exact terminology matches first so a small model sees literal support.
-        merged = [*priority_hits, *size_fact_hits, *exact_phrase_hits, *lexical_hits, *dense_hits]
+        merged = [
+            *priority_hits, *size_fact_hits, *exact_phrase_hits, *lexical_hits,
+            *((chunk, distance, "dense") for chunk, distance in dense_hits),
+        ]
         previous_ids = {chunk.chunk_id for chunk in state.retrieved_chunks} if recovering else set()
         if recovering:
             novel = [hit for hit in merged if hit[0].chunk_id not in previous_ids]
@@ -734,16 +745,16 @@ class QAService:
             merged = [*novel[:3], *previous, *novel[3:]]
         hits = []
         seen_ids = set()
-        for chunk, distance in merged:
+        for chunk, distance, channel in merged:
             if chunk.chunk_id not in seen_ids:
-                hits.append((chunk, distance))
+                hits.append((chunk, distance, channel))
                 seen_ids.add(chunk.chunk_id)
             if len(hits) >= candidate_limit:
                 break
         chosen: list[Chunk] = []
         budget = min(2500, self.settings.context_tokens - 800)
         spent = len(self.tokenizer.encode(query, add_special_tokens=False)) + 120
-        for chunk, distance in hits:
+        for chunk, distance, channel in hits:
             if (
                 chunk.arxiv_id != state.selected_paper.arxiv_id
                 or chunk.version != state.selected_paper.version
@@ -753,7 +764,7 @@ class QAService:
                     "A retrieved chunk belongs to another paper/version.",
                     "Rebuild the selected paper index.",
                 )
-            if distance > self.settings.qa_max_distance:
+            if channel == "dense" and distance > self.settings.qa_max_distance:
                 continue
             if _is_reference(chunk) and not include_references:
                 continue
@@ -1063,6 +1074,32 @@ class QAService:
         raise StageFailure("UNKNOWN_STAGE", f"Unknown QA stage {stage}.", "Check the QA graph.")
 
 
+def _current_briefing_path(settings: Settings, safe_id: str, matches: list[Path]) -> Path:
+    if len(matches) == 1:
+        return matches[0].resolve()
+    if len(matches) > 1:
+        pdf_path = settings.data_dir / "pdfs" / f"{safe_id}.pdf"
+        try:
+            checksum = hashlib.sha256(pdf_path.read_bytes()).hexdigest()
+            parsed_path = settings.data_dir / "parsed" / f"{safe_id}-{checksum[:12]}.json"
+            parsed = ParsedPaper.model_validate_json(parsed_path.read_text(encoding="utf-8"))
+            if parsed.pdf_checksum == checksum:
+                _, fingerprint = ChromaIndexStore(settings)._identity(parsed)
+                current = [
+                    path for path in matches
+                    if path.name == f"{safe_id}-{fingerprint[:12]}-b{BRIEFING_VERSION}.json"
+                ]
+                if len(current) == 1:
+                    return current[0].resolve()
+        except (OSError, ValueError, ValidationError):
+            pass
+    raise StageFailure(
+        "BRIEFING_NOT_UNIQUE",
+        "Expected one current briefing for that paper version.",
+        "Run brief-paper or provide the exact outputs/*.json path.",
+    )
+
+
 def load_qa_session(settings: Settings, source: str) -> SessionState:
     """Reconstruct an ephemeral ready session from the audited Step 14 artifact."""
     output_dir = settings.output_dir.resolve()
@@ -1084,13 +1121,7 @@ def load_qa_session(settings: Settings, source: str) -> SessionState:
             )
         safe_id = paper_id.replace("/", "_")
         matches = list(output_dir.glob(f"{safe_id}-*-b{BRIEFING_VERSION}.json"))
-        if len(matches) != 1:
-            raise StageFailure(
-                "BRIEFING_NOT_UNIQUE",
-                "Expected one current briefing for that paper version.",
-                "Run brief-paper or provide the exact outputs/*.json path.",
-            )
-        path = matches[0].resolve()
+        path = _current_briefing_path(settings, safe_id, matches)
     try:
         artifact = BriefingArtifact.model_validate_json(path.read_text(encoding="utf-8"))
         evidence_path = Path(artifact.evidence_path).resolve()

@@ -24,7 +24,9 @@ class Settings(BaseSettings):
     model_timeout_seconds: float = Field(default=180, gt=0)
     embedding_batch_size: int = Field(default=16, ge=1, le=64)
     embedding_device: Literal["cpu"] = "cpu"
-    candidate_count: int = Field(default=10, ge=1, le=10)
+    candidate_count: int = Field(default=30, ge=1, le=50)
+    candidate_oldest_count: int = Field(default=50, ge=0, le=100)
+    candidate_phrase_count: int = Field(default=20, ge=0, le=50)
     retrieval_candidates: int = Field(default=12, ge=1)
     evidence_chunks: int = Field(default=6, ge=1)
     qa_max_distance: float = Field(default=0.85, ge=0, le=2)
@@ -33,6 +35,8 @@ class Settings(BaseSettings):
     chunk_overlap_tokens: int = Field(default=30, ge=0)
     max_pdf_mb: int = Field(default=50, ge=1)
     max_pdf_pages: int = Field(default=60, ge=1)
+    ocr_enabled: bool = True
+    ocr_dpi: int = Field(default=150, ge=100, le=300)
     pdf_timeout_seconds: float = Field(default=60, gt=0, le=300)
     api_interval_seconds: float = Field(default=3, ge=3)
     api_timeout_seconds: float = Field(default=20, gt=0, le=120)
